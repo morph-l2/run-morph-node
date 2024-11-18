@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:  
+  geth: 
+    container_name: morph-geth
+    image: ghcr.io/morph-l2/go-ethereum:latest
+    restart: unless-stopped
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "8551"
+      - "6060"
+      - "30303"
+    volumes:
+      - "${MORPH_HOME}/geth-data:/db"
+      - "${JWT_SECRET_FILE}:/jwt-secret.txt"
+      - "${GETH_ENTRYPOINT_FILE}:/entrypoint.sh"
+    environment:
+      - MORPH_FLAG=${MORPH_FLAG}
+    entrypoint:
+      - "/bin/sh"
+      - "/entrypoint.sh" 
+
+  node:
+    container_name: morph-node
+    depends_on:
+      geth:
+        condition: service_started
+    image: ghcr.io/morph-l2/node:latest
+    restart: unless-stopped
+    ports:
+      - "26656"
+      - "26657"
+      - "26658"
+      - "26660"
+    environment:
+      - MORPH_NODE_L2_ETH_RPC=http://morph-geth:8545
+      - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
+      - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
+    volumes:
+      - "${MORPH_HOME}/node-data:/db"
+      - "${JWT_SECRET_FILE}:/jwt-secret.txt"
+    command: >
+      morphnode
+      --home /db
+      --log.filename /db/node.log    
+
+  validator:
+    container_name: validator_node
+    depends_on:
+      geth:
+        condition: service_started
+    image: ghcr.io/morph-l2/node:latest
+    ports:
+      - "26660"
+    environment:
+      - MORPH_NODE_L2_ETH_RPC=http://morph-geth:8545
+      - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
+      - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
+      ## todo need to replace it to a public network
+      - MORPH_NODE_L1_ETH_RPC=${L1_ETH_RPC}
+      - MORPH_NODE_L1_ETH_BEACON_RPC=${L1_BEACON_CHAIN_RPC}
+      - MORPH_NODE_SYNC_DEPOSIT_CONTRACT_ADDRESS=${L1MESSAGEQUEUE_CONTRACT}
+      - MORPH_NODE_VALIDATOR_PRIVATE_KEY=0x0000000000000000000000000000000000000000000000000000000000000001
+      - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACY}
+      - MORPH_NODE_DERIVATION_START_HEIGHT=20996776
+      - MORPH_NODE_SYNC_START_HEIGHT=20996776
+      - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
+    volumes:
+      - "${MORPH_HOME}/node-data:/db"
+      - "${JWT_SECRET_FILE}:/jwt-secret.txt"
+    command: >
+      morphnode
+      --validator
+      --home /db
