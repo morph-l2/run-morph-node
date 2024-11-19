@@ -3,7 +3,7 @@ version: '3.8'
 services:  
   geth: 
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:latest
+    image: ghcr.io/morph-l2/go-ethereum:2.0.1
     restart: unless-stopped
     ports:
       - "8545:8545"
@@ -26,7 +26,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:latest
+    image: ghcr.io/morph-l2/node:0.4.0
     restart: unless-stopped
     ports:
       - "26656"
@@ -63,8 +63,8 @@ services:
       - MORPH_NODE_SYNC_DEPOSIT_CONTRACT_ADDRESS=${L1MESSAGEQUEUE_CONTRACT}
       - MORPH_NODE_VALIDATOR_PRIVATE_KEY=0x0000000000000000000000000000000000000000000000000000000000000001
       - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACY}
-      - MORPH_NODE_DERIVATION_START_HEIGHT=20996776
-      - MORPH_NODE_SYNC_START_HEIGHT=20996776
+      - MORPH_NODE_DERIVATION_START_HEIGHT=${START_HEIGHT}
+      - MORPH_NODE_SYNC_START_HEIGHT=${START_HEIGHT}
       - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
     volumes:
       - "${MORPH_HOME}/node-data:/db"
