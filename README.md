@@ -63,12 +63,12 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 |    Snapshot Name    | Download URL |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:-------------|:-----------------------|:--------------------|
-| snapshot-20241230-1 |[Download Link](#https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
+| snapshot-20241230-1 |[Download Link](https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
 
 
 |    Snapshot Name    | Download URL |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:-------------|:------------------------|:--------------------|
-| snapshot-20241218-1 |[Download Link](#https://snapshot.morphl2.io/holesky/snapshot-20241218-1.tar.gz)|2960695|2960530|
+| snapshot-20241218-1 |[Download Link](https://snapshot.morphl2.io/holesky/snapshot-20241218-1.tar.gz)|2960695|2960530|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
