@@ -10,7 +10,7 @@
 
 ## Prerequisites
 
-Before setting up a Morph validator node, ensure you have the following installed:
+Before setting up a Morph node, ensure you have the following installed:
 
 - **Docker**: Containerization platform to run the node.
 - **Docker Compose**: Tool for defining and running multi-container Docker applications.
@@ -57,14 +57,14 @@ Before setting up a Morph validator node, ensure you have the following installe
     - The folder structure will be like
         ```
         └── ${MORPH_HOME}
-        ├── geth-data // data directory for geth
-        │   └── static-nodes.json
-        │   └── geth // directory from snapshot/geth   
-        └── node-data // data directory for node
-            ├── config
-            │   ├── config.toml
-            │   └── genesis.json
-            └── data // data directory from snapshot/node
+            ├── geth-data // data directory for geth
+            │   └── static-nodes.json
+            │   └── geth // directory from snapshot/geth   
+            └── node-data // data directory for node
+                ├── config
+                │   ├── config.toml
+                │   └── genesis.json
+                └── data // data directory from snapshot/node
         ```
 
 
