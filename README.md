@@ -47,6 +47,27 @@ Before setting up a Morph validator node, ensure you have the following installe
     make make download-and-decompress-holesky-snapshot
     ```
 
+- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. 
+    - For example, if the snapshot folder is named `snapshot-20241218-1`, move the directory `snapshot-20241218-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20241218-1/data` to the `${NODE_DATA_DIR}/data directory`.
+        ```
+        mv ./morph-node/snapshot-20241218-1/geth ${MORPH_HOME}/geth-data
+        mv ./morph-node/snapshot-20241218-1/data/* ${MORPH_HOME}/node-data/data
+        ```
+
+    - The folder structure will be like
+        ```
+        └── ${MORPH_HOME}
+        ├── geth-data // data directory for geth
+        │   └── static-nodes.json
+        │   └── geth // directory from snapshot/geth   
+        └── node-data // data directory for node
+            ├── config
+            │   ├── config.toml
+            │   └── genesis.json
+            └── data // data directory from snapshot/node
+        ```
+
+
 5. Run the Node:
 
 - Start the node using Docker Compose:
@@ -59,12 +80,16 @@ Before setting up a Morph validator node, ensure you have the following installe
 
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the Derivation Start Height and L1 Msg Start Height parameters match the selected snapshot.
+The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the `DERIVATION_START_HEIGHT` and `L1_MSG_START_HEIGHT` variables defined in the `.env`(or `.env_holesky` if testnet)match the selected snapshot.
+
+**For mainnet**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:-----------------------|:--------------------|
 |[snapshot-20241230-1](https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
 
+
+**For testnet**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:------------------------|:--------------------|
