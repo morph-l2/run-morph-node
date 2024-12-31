@@ -61,14 +61,14 @@ Before setting up a Morph validator node, ensure you have the following installe
 
 The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the Derivation Start Height and L1 Msg Start Height parameters match the selected snapshot.
 
-|    Snapshot Name    | Download URL |Derivation Start Height | L1 Msg Start Height |
-|:--------------------|:-------------|:-----------------------|:--------------------|
-| snapshot-20241230-1 |[Download Link](https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
+|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
+|:--------------------|:-----------------------|:--------------------|
+|[snapshot-20241230-1](https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
 
 
-|    Snapshot Name    | Download URL |Derivation Start Height | L1 Msg Start Height |
-|:--------------------|:-------------|:------------------------|:--------------------|
-| snapshot-20241218-1 |[Download Link](https://snapshot.morphl2.io/holesky/snapshot-20241218-1.tar.gz)|2960695|2960530|
+|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
+|:--------------------|:------------------------|:--------------------|
+|[snapshot-20241218-1](https://snapshot.morphl2.io/holesky/snapshot-20241218-1.tar.gz)|2960695|2960530|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
