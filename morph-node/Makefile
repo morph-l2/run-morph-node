@@ -1,13 +1,24 @@
 include .env
 
+# Store the value of JWT_SECRET_FILE from .env
+JWT_SECRET_FILE_MAINNET := $(JWT_SECRET_FILE)
+
+include .env_holesky
+
+# Store the value of JWT_SECRET_FILE from .env_holesky
+JWT_SECRET_FILE_HOLESKY := $(JWT_SECRET_FILE)
+
 generate-jwt:
-	@[ -f $(JWT_SECRET_FILE) ] || (echo "Generating $(JWT_SECRET_FILE)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE) && echo "$(JWT_SECRET_FILE) created.")
+	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
+
+generate-jwt-holesky:
+	@[ -f $(JWT_SECRET_FILE_HOLESKY) ] || (echo "Generating $(JWT_SECRET_FILE_HOLESKY)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_HOLESKY) && echo "$(JWT_SECRET_FILE_HOLESKY) created.")
 
 ## node management
 run-node: generate-jwt
-	docker-compose up node &
+	docker-compose --env-file .env up node &
 
-run-holesky-node: generate-jwt
+run-holesky-node: generate-jwt-holesky
 	docker-compose --env-file .env_holesky up node &
 
 stop-node:
@@ -18,9 +29,9 @@ rm-node:
 
 ## validator management
 run-validator: generate-jwt
-	docker-compose up validator &
+	docker-compose --env-file .env up validator &
 
-run-holesky-validator: generate-jwt
+run-holesky-validator: generate-jwt-holesky
 	docker-compose --env-file .env_holesky up validator &
 
 stop-validator:

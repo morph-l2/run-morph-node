@@ -50,7 +50,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:latest
+    image: ghcr.io/morph-l2/node:0.4.0
     ports:
       - "26660"
     environment:
