@@ -68,13 +68,19 @@ Before setting up a Morph node, ensure you have the following installed:
         ```
 
 
-5. Run the Node:
+5. **Run the Node**:
 
 - Start the node using Docker Compose:
 
     ```bash
     make run-node
     ```
+
+    For testnet, run
+        
+    ```bash
+    make run-holesky-node
+    ```   
 
 - This command will set up and run the node based on the configurations specified in your .env file.
 
