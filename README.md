@@ -44,7 +44,7 @@ Before setting up a Morph node, ensure you have the following installed:
 - For Holesky testnet, use the corresponding command:
 
     ```bash
-    make make download-and-decompress-holesky-snapshot
+    make download-and-decompress-holesky-snapshot
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. 
