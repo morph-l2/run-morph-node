@@ -1,1 +1,1 @@
-# config-template
+# RUN-MORPH-NODE
