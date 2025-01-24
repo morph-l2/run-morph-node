@@ -48,10 +48,10 @@ Before setting up a Morph node, ensure you have the following installed:
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. 
-    - For example, if the snapshot folder is named `snapshot-20241230-1`, move the directory `snapshot-20241230-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20241230-1/data` to the `${NODE_DATA_DIR}/data directory`.
+    - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
         ```
-        mv ./morph-node/snapshot-20241230-1/geth ${MORPH_HOME}/geth-data
-        mv ./morph-node/snapshot-20241230-1/data/* ${MORPH_HOME}/node-data/data
+        mv ./morph-node/snapshot-20250122-1/geth ${MORPH_HOME}/geth-data
+        mv ./morph-node/snapshot-20250122-1/data/* ${MORPH_HOME}/node-data/data
         ```
 
     - The folder structure will be like
