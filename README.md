@@ -48,10 +48,10 @@ Before setting up a Morph node, ensure you have the following installed:
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. 
-    - For example, if the snapshot folder is named `snapshot-20241230-1`, move the directory `snapshot-20241230-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20241230-1/data` to the `${NODE_DATA_DIR}/data directory`.
+    - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
         ```
-        mv ./morph-node/snapshot-20241230-1/geth ${MORPH_HOME}/geth-data
-        mv ./morph-node/snapshot-20241230-1/data/* ${MORPH_HOME}/node-data/data
+        mv ./morph-node/snapshot-20250122-1/geth ${MORPH_HOME}/geth-data
+        mv ./morph-node/snapshot-20250122-1/data/* ${MORPH_HOME}/node-data/data
         ```
 
     - The folder structure will be like
@@ -92,14 +92,18 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:-----------------------|:--------------------|
-|[snapshot-20241230-1](https://snapshot.morphl2.io/mainnet/snapshot-20241230-1.tar.gz)|21512271|21511271|
+|[snapshot-20250325-1](https://snapshot.morphl2.io/mainnet/snapshot-20250325-1.tar.gz)|22121099|22119954|
+|[snapshot-20250304-1](https://snapshot.morphl2.io/mainnet/snapshot-20250304-1.tar.gz)|21971760|21971689|
+|[snapshot-20250205-1](https://snapshot.morphl2.io/mainnet/snapshot-20250205-1.tar.gz)|21779157|21778981|
 
 
 **For testnet**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
 |:--------------------|:------------------------|:--------------------|
-|[snapshot-20241218-1](https://snapshot.morphl2.io/holesky/snapshot-20241218-1.tar.gz)|2960695|2960530|
+|[snapshot-20250416-1](https://snapshot.morphl2.io/holesky/snapshot-20250416-1.tar.gz)|3680753|3680413|
+|[snapshot-20250331-1](https://snapshot.morphl2.io/holesky/snapshot-20250331-1.tar.gz)|3588874|3588818|
+|[snapshot-20250325-1](https://snapshot.morphl2.io/holesky/snapshot-20250325-1.tar.gz)|3553163|3552960|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
