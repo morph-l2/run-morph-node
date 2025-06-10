@@ -90,12 +90,12 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 **For mainnet**:
 
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
+|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:-----------------------|:--------------------|
-|[snapshot-20250609-1](https://snapshot.morphl2.io/mainnet/snapshot-20250609-1.tar.gz)|22665082|22665058|
-|[snapshot-20250428-1](https://snapshot.morphl2.io/mainnet/snapshot-20250428-1.tar.gz)|22366807|22366587|
-|[snapshot-20250325-1](https://snapshot.morphl2.io/mainnet/snapshot-20250325-1.tar.gz)|22121099|22119954|
-|[snapshot-20250304-1](https://snapshot.morphl2.io/mainnet/snapshot-20250304-1.tar.gz)|21971760|21971689|
+|[snapshot-20250609-1](https://snapshot.morphl2.io/mainnet/snapshot-20250610-1.tar.gz)|22666573|22665058|10852363+|
+|[snapshot-20250428-1](https://snapshot.morphl2.io/mainnet/snapshot-20250428-1.tar.gz)|22366807|22366587|9807643+|
+|[snapshot-20250325-1](https://snapshot.morphl2.io/mainnet/snapshot-20250325-1.tar.gz)|22121099|22119954| |
+|[snapshot-20250304-1](https://snapshot.morphl2.io/mainnet/snapshot-20250304-1.tar.gz)|21971760|21971689| |
 
 
 **For testnet**:
