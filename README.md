@@ -92,19 +92,18 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:-----------------------|:--------------------|:--------------------|
-|[snapshot-20250609-1](https://snapshot.morphl2.io/mainnet/snapshot-20250610-1.tar.gz)|22666573|22665058|10852363+|
-|[snapshot-20250428-1](https://snapshot.morphl2.io/mainnet/snapshot-20250428-1.tar.gz)|22366807|22366587|9807643+|
-|[snapshot-20250325-1](https://snapshot.morphl2.io/mainnet/snapshot-20250325-1.tar.gz)|22121099|22119954| |
-|[snapshot-20250304-1](https://snapshot.morphl2.io/mainnet/snapshot-20250304-1.tar.gz)|21971760|21971689| |
+|[snapshot-20250609-1](https://snapshot.morphl2.io/mainnet/snapshot-20250610-1.tar.gz)|22666573|22665058|>=10852363|
+|[snapshot-20250428-1](https://snapshot.morphl2.io/mainnet/snapshot-20250428-1.tar.gz)|22366807|22366587|>=9807643|
+|[snapshot-20250325-1](https://snapshot.morphl2.io/mainnet/snapshot-20250325-1.tar.gz)|22121099|22119954|>=7837127|
 
 
 **For testnet**:
 
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height |
-|:--------------------|:------------------------|:--------------------|
-|[snapshot-20250428-1](https://snapshot.morphl2.io/holesky/snapshot-20250428-1.tar.gz)|3748991|3748974|
-|[snapshot-20250416-1](https://snapshot.morphl2.io/holesky/snapshot-20250416-1.tar.gz)|3680753|3680413|
-|[snapshot-20250331-1](https://snapshot.morphl2.io/holesky/snapshot-20250331-1.tar.gz)|3588874|3588818|
+|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:--------------------|:------------------------|:--------------------|:--------------------|
+|[snapshot-20250428-1](https://snapshot.morphl2.io/holesky/snapshot-20250428-1.tar.gz)|3748991|3748974|>=17193670|
+|[snapshot-20250416-1](https://snapshot.morphl2.io/holesky/snapshot-20250416-1.tar.gz)|3680753|3680413|>=16950377|
+|[snapshot-20250331-1](https://snapshot.morphl2.io/holesky/snapshot-20250331-1.tar.gz)|3588874|3588818|>=16623991|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
