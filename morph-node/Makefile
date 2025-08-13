@@ -16,10 +16,10 @@ generate-jwt-holesky:
 
 ## node management
 run-node: generate-jwt
-	docker-compose --env-file .env up node &
+	docker compose --env-file .env up node &
 
 run-holesky-node: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up node &
+	docker compose --env-file .env_holesky up node &
 
 stop-node:
 	docker stop morph-node morph-geth
@@ -29,10 +29,10 @@ rm-node:
 
 ## validator management
 run-validator: generate-jwt
-	docker-compose --env-file .env up validator &
+	docker compose --env-file .env up validator &
 
 run-holesky-validator: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up validator &
+	docker compose --env-file .env_holesky up validator &
 
 stop-validator:
 	docker stop validator-node morph-geth
