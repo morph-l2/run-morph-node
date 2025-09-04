@@ -92,9 +92,9 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:-----------------------|:--------------------|:--------------------|
+|[snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250903-1.tar.gz)|23280733|23280844|16175051|
 |[snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250818-1.tar.gz)|23038013|23030537|13820034|
 |[snapshot-20250703-1](https://snapshot.morphl2.io/mainnet/snapshot-20250703-1.tar.gz)|22838390|22837392|11624274|
-|[snapshot-20250609-1](https://snapshot.morphl2.io/mainnet/snapshot-20250610-1.tar.gz)|22666573|22665058|10852363|
 
 
 
@@ -102,10 +102,9 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:------------------------|:--------------------|:--------------------|
+|[snapshot-20250818-1](https://snapshot.morphl2.io/holesky/snapshot-20250903-1.tar.gz)|4445350|4445989|19741862|
 |[snapshot-20250818-1](https://snapshot.morphl2.io/holesky/snapshot-20250818-1.tar.gz)|4360545|4359976|19432113|
 |[snapshot-20250428-1](https://snapshot.morphl2.io/holesky/snapshot-20250428-1.tar.gz)|3748991|3748974|17193670|
-|[snapshot-20250416-1](https://snapshot.morphl2.io/holesky/snapshot-20250416-1.tar.gz)|3680753|3680413|16950377|
-|[snapshot-20250331-1](https://snapshot.morphl2.io/holesky/snapshot-20250331-1.tar.gz)|3588874|3588818|16623991|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
