@@ -212,17 +212,9 @@ external_address = ""
 seeds = ""
 
 # Comma separated list of nodes to keep persistent connections to
-persistent_peers = """271ac9ba142a376f8380def75cf17e1519c27495@morph-node-hoodi-a:26656,\
-d1694b9ca21b5dff65dacf308201c254f1ad199a@morph-node-hoodi-b:26656,\
-1860e50567b7bafd979b5ad021aabda1cf612414@morph-node-hoodi-c:26656,\
-3bf5d70cebfe35263ea940a92344da89e3349dbb@morph-node-hoodi-d:26656,\
-cbb560dd2dd353ee7cdbb39e2211c8ddb30563c7@morph-sentry-node-hoodi-a:26656,\
-c8ed74375865bd2f76ed22faa5fb6a618c44d6b9@morph-sentry-node-hoodi-b:26656,\
-fd19840a7d693e93a3061ba074074a597bf359b5@morph-sentry-node-hoodi-c:26656,\
-7581c3fc378f1d6013e4f2eaa1e50fc3c25b9524@morph-dataseed-node-hoodi-a:26656,\
-0fb5ce425197a462a66de015ee5fbbf103835b8a@morph-dataseed-node-hoodi-b:26656,\
-d1a99acbf7139c9cf148357332986bbe7358793b@morph-dataseed-node-hoodi-c:26656,\
-cc3df68ac1d0265b32df8fc197ff722d6b6aa8ef@morph-full-node-hoodi-a:26656"""
+persistent_peers = """38d1fea94cd2b003eb4ee95ada2e378f6291be4c@18.180.171.129:26656,\
+3dbb3737bc72446cf3a999e45f4978168e910629@18.177.239.255:26656,\
+ebd24fb9484e601c3a67fa1e69ca2f57d51de520@35.79.241.4:26656"""
 # UPNP port forwarding
 upnp = false
 
