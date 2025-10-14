@@ -30,8 +30,8 @@ Before setting up a Morph node, ensure you have the following installed:
    ```
 
 3. **Configure Environment Variables**:
-    
-    Edit the `.env` file to set the appropriate values for your setup if needed. For instance, specify the `MORPH_HOME` if you plan to user your specified directory as your node data home. By default, it takes  `./mainnet` as the node data home for mainnet network. 
+
+   Edit the `.env` file to set the appropriate values for your setup if needed. For instance, specify the `MORPH_HOME` if you plan to user your specified directory as your node data home. By default, it takes  `./mainnet` as the node data home for mainnet network.
 
 4. **Download and Decompress Snapshot (Optional but Recommended)**:
 
@@ -47,7 +47,7 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-holesky-snapshot
     ```
 
-- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. 
+- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.
     - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
         ```
         mv ./morph-node/snapshot-20250122-1/geth ${MORPH_HOME}/geth-data
@@ -76,8 +76,8 @@ Before setting up a Morph node, ensure you have the following installed:
     make run-node
     ```
 
-    For testnet, run
-        
+  For testnet, run
+
     ```bash
     make run-holesky-node
     ```   
@@ -90,15 +90,20 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 **For mainnet**:
 
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------------|:-----------------------|:--------------------|:--------------------|
-|[snapshot-20250903-1](https://snapshot.morphl2.io/mainnet/snapshot-20250903-1.tar.gz)|23280733|23280844|16175051|
-|[snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250818-1.tar.gz)|23038013|23030537|13820034|
-|[snapshot-20250703-1](https://snapshot.morphl2.io/mainnet/snapshot-20250703-1.tar.gz)|22838390|22837392|11624274|
+| Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20250925-1](https://snapshot.morphl2.io/mainnet/snapshot-20250925-1.tar.gz) | 23438772                | 23438643            | 17232059       |
+| [snapshot-20250903-1](https://snapshot.morphl2.io/mainnet/snapshot-20250903-1.tar.gz) | 23280733                | 23280844            | 16175051       |
+| [snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250818-1.tar.gz) | 23038013                | 23030537            | 13820034       |
 
 
+**For hoodi testnet**:
 
-**For testnet**:
+| Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20250925-1](https://snapshot.morphl2.io/hoodi/snapshot-20250925-1.tar.gz) | 1284793                 | 1284539             | 119505         |
+
+**For holesky testnet**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:------------------------|:--------------------|:--------------------|
