@@ -90,15 +90,20 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 **For mainnet**:
 
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------------|:-----------------------|:--------------------|:--------------------|
-|[snapshot-20250903-1](https://snapshot.morphl2.io/mainnet/snapshot-20250903-1.tar.gz)|23280733|23280844|16175051|
-|[snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250818-1.tar.gz)|23038013|23030537|13820034|
-|[snapshot-20250703-1](https://snapshot.morphl2.io/mainnet/snapshot-20250703-1.tar.gz)|22838390|22837392|11624274|
+| Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20250925-1](https://snapshot.morphl2.io/mainnet/snapshot-20250925-1.tar.gz) | 23438772                | 23438643            | 17232059       |
+| [snapshot-20250903-1](https://snapshot.morphl2.io/mainnet/snapshot-20250903-1.tar.gz) | 23280733                | 23280844            | 16175051       |
+| [snapshot-20250818-1](https://snapshot.morphl2.io/mainnet/snapshot-20250818-1.tar.gz) | 23038013                | 23030537            | 13820034       |
 
 
+**For hoodi testnet**:
 
-**For testnet**:
+| Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20250925-1](https://snapshot.morphl2.io/hoodi/snapshot-20250925-1.tar.gz) | 1284793                 | 1284539             | 119505         |
+
+**For holesky testnet**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:------------------------|:--------------------|:--------------------|
