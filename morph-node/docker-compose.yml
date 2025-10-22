@@ -3,7 +3,7 @@ version: '3.8'
 services:  
   geth: 
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:2.0.6
+    image: ghcr.io/morph-l2/go-ethereum:2.0.7
     restart: unless-stopped
     ports:
       - "8545:8545"
