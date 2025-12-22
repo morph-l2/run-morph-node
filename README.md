@@ -5,7 +5,7 @@
 ## Features
 
 - **Dockerized Deployment**: Simplifies the process of setting up Morph validator nodes using Docker containers.
-- **Network Support**: Provides configurations for both Mainnet and Holesky testnet environments.
+- **Network Support**: Provides configurations for both Mainnet and Hoodi testnet environments.
 - **Snapshot Synchronization**: Supports synchronizing node data from snapshots to expedite the setup process.
 
 ## Prerequisites
@@ -41,10 +41,10 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-mainnet-snapshot
     ```
 
-- For Holesky testnet, use the corresponding command:
+- For Hoodi testnet, use the corresponding command:
 
     ```bash
-    make download-and-decompress-holesky-snapshot
+    make download-and-decompress-hoodi-snapshot
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.
@@ -79,14 +79,14 @@ Before setting up a Morph node, ensure you have the following installed:
   For testnet, run
 
     ```bash
-    make run-holesky-node
+    make run-hoodi-node
     ```   
 
 - This command will set up and run the node based on the configurations specified in your .env file.
 
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the `DERIVATION_START_HEIGHT` and `L1_MSG_START_HEIGHT` variables defined in the `.env`(or `.env_holesky` if testnet)match the selected snapshot.
+The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the `DERIVATION_START_HEIGHT` and `L1_MSG_START_HEIGHT` variables defined in the `.env`(or `.env_hoodi` if testnet)match the selected snapshot.
 
 **For mainnet**:
 
@@ -107,7 +107,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20251022-1](https://snapshot.morphl2.io/hoodi/snapshot-20251022-1.tar.gz) | 1464134                 | 1463803             | 741619         |
 
 
-**For holesky testnet**:
+**For holesky testnet(legacy)**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------|:------------------------|:--------------------|:--------------------|
