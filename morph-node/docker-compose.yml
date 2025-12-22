@@ -43,7 +43,8 @@ services:
     command: >
       morphnode
       --home /db
-      --log.filename /db/node.log    
+      --log.filename /db/node.log
+      ${NODE_EXTRA_FLAGS:-}
 
   validator:
     container_name: validator_node
