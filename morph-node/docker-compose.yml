@@ -26,7 +26,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.4.8
+    image: ghcr.io/morph-l2/node:0.4.9
     restart: unless-stopped
     ports:
       - "26656"
@@ -51,7 +51,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.4.6
+    image: ghcr.io/morph-l2/node:0.4.9
     ports:
       - "26660"
     environment:
