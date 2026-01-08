@@ -92,19 +92,18 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20260108-1](https://snapshot.morphl2.io/mainnet/snapshot-20260108-1.tar.gz) | 24188158                | 24187100            | 19751115       |
 | [snapshot-20251209-1](https://snapshot.morphl2.io/mainnet/snapshot-20251209-1.tar.gz) | 23974107                | 23972111            | 19063835       |
 | [snapshot-20251126-1](https://snapshot.morphl2.io/mainnet/snapshot-20251126-1.tar.gz) | 23881820                | 23881511            | 18759307       |
-| [snapshot-20251022-1](https://snapshot.morphl2.io/mainnet/snapshot-20251022-1.tar.gz) | 23630329                | 23630265            | 17926367       |
-
 
 
 **For hoodi testnet**:
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
-| [snapshot-20251209-1](https://snapshot.morphl2.io/hoodi/snapshot-20251209-1.tar.gz) | 1787123                 | 1786515             | 1774247       |
+| [snapshot-20260108-1](https://snapshot.morphl2.io/hoodi/snapshot-20260108-1.tar.gz) | 1988223                 | 1985849             | 2431455        |
+| [snapshot-20251209-1](https://snapshot.morphl2.io/hoodi/snapshot-20251209-1.tar.gz) | 1787123                 | 1786515             | 1774247        |
 | [snapshot-20251126-1](https://snapshot.morphl2.io/hoodi/snapshot-20251126-1.tar.gz) | 1699277                 | 1693399             | 1498597        |
-| [snapshot-20251022-1](https://snapshot.morphl2.io/hoodi/snapshot-20251022-1.tar.gz) | 1464134                 | 1463803             | 741619         |
 
 
 **For holesky testnet(legacy)**:
