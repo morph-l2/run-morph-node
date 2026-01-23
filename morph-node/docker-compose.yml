@@ -3,7 +3,7 @@ version: '3.8'
 services:  
   geth: 
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:2.1.0
+    image: ghcr.io/morph-l2/go-ethereum:2.1.1
     restart: unless-stopped
     ports:
       - "8545:8545"
@@ -26,7 +26,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.4.9
+    image: ghcr.io/morph-l2/node:0.4.10
     restart: unless-stopped
     ports:
       - "26656"
@@ -37,6 +37,8 @@ services:
       - MORPH_NODE_L2_ETH_RPC=http://morph-geth:8545
       - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
       - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
+      - MORPH_NODE_L1_ETH_RPC=${L1_ETH_RPC}
+      - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACY}
     volumes:
       - "${MORPH_HOME}/node-data:/db"
       - "${JWT_SECRET_FILE}:/jwt-secret.txt"
@@ -51,7 +53,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.4.9
+    image: ghcr.io/morph-l2/node:0.4.10
     ports:
       - "26660"
     environment:
