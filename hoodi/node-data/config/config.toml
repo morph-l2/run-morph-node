@@ -96,10 +96,16 @@ laddr = "tcp://0.0.0.0:26657"
 cors_allowed_origins = []
 
 # A list of methods the client is allowed to use with cross-domain requests
-cors_allowed_methods = ["HEAD", "GET", "POST", ]
+cors_allowed_methods = ["HEAD", "GET", "POST"]
 
 # A list of non simple headers the client is allowed to use with cross-domain requests
-cors_allowed_headers = ["Origin", "Accept", "Content-Type", "X-Requested-With", "X-Server-Time", ]
+cors_allowed_headers = [
+    "Origin",
+    "Accept",
+    "Content-Type",
+    "X-Requested-With",
+    "X-Server-Time",
+]
 
 # TCP or UNIX socket address for the gRPC server to listen on
 # NOTE: This server only supports /broadcast_tx_commit
@@ -238,16 +244,16 @@ unconditional_peer_ids = ""
 persistent_peers_max_dial_period = "0s"
 
 # Time to wait before flushing messages out on the connection
-flush_throttle_timeout = "100ms"
+flush_throttle_timeout = "10ms"
 
 # Maximum size of a message packet payload, in bytes
 max_packet_msg_payload_size = 1024
 
 # Rate at which packets can be sent, in bytes/second
-send_rate = 5120000
+send_rate = 52428800
 
 # Rate at which packets can be received, in bytes/second
-recv_rate = 5120000
+recv_rate = 102428800
 
 # Set true to enable the peer-exchange reactor
 pex = false
@@ -355,7 +361,7 @@ create_empty_blocks = true
 create_empty_blocks_interval = "4s"
 
 # Reactor sleep duration parameters
-peer_gossip_sleep_duration = "100ms"
+peer_gossip_sleep_duration = "10ms"
 peer_query_maj23_sleep_duration = "2s"
 
 #######################################################
