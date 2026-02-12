@@ -92,19 +92,20 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20260210-1](https://snapshot.morphl2.io/mainnet/snapshot-20260210-1.tar.gz) | 24424695                | 24424698            | 20674922       |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/mainnet/snapshot-20260123-1.tar.gz) | 24294756                | 24280251            | 20169165       |
 | [snapshot-20260108-1](https://snapshot.morphl2.io/mainnet/snapshot-20260108-1.tar.gz) | 24188158                | 24187100            | 19751115       |
-| [snapshot-20251209-1](https://snapshot.morphl2.io/mainnet/snapshot-20251209-1.tar.gz) | 23974107                | 23972111            | 19063835       |
 
-20,169,165
+
+mainnet/snapshot-20260210-1.tar.gz  
 
 **For hoodi testnet**:
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/hoodi/snapshot-20260123-1.tar.gz) | 2087054                 | 2076510             | 2767603        |
 | [snapshot-20260108-1](https://snapshot.morphl2.io/hoodi/snapshot-20260108-1.tar.gz) | 1988223                 | 1985849             | 2431455        |
-| [snapshot-20251209-1](https://snapshot.morphl2.io/hoodi/snapshot-20251209-1.tar.gz) | 1787123                 | 1786515             | 1774247        |
 
 
 **For holesky testnet(legacy)**:
