@@ -12,6 +12,8 @@ JWT_SECRET_FILE_HOLESKY := $(JWT_SECRET_FILE)
 
 JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 
+include .env_mpt
+
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
 
@@ -31,6 +33,12 @@ run-holesky-node: generate-jwt-holesky
 run-hoodi-node: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up node &
 
+run-hoodi-mpt-node: generate-jwt-hoodi
+	docker-compose --env-file .env_hoodi --env-file .env_mpt up node &
+
+run-mainnet-mpt-node: generate-jwt
+	docker-compose --env-file .env --env-file .env_mpt up node &
+
 stop-node:
 	docker stop morph-node morph-geth
 
@@ -46,6 +54,12 @@ run-holesky-validator: generate-jwt-holesky
 
 run-hoodi-validator: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up validator &
+
+run-hoodi-mpt-validator: generate-jwt-hoodi
+	docker-compose --env-file .env_hoodi --env-file .env_mpt up validator &
+
+run-mainnet-mpt-validator: generate-jwt
+	docker-compose --env-file .env --env-file .env_mpt up validator &
 
 stop-validator:
 	docker stop validator-node morph-geth
@@ -93,6 +107,11 @@ download-and-decompress-hoodi-snapshot:
 download-and-decompress-mainnet-snapshot:
 	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
 
+download-and-decompress-hoodi-mpt-snapshot:
+	$(call download-and-decompress,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
+
+download-and-decompress-mainnet-mpt-snapshot:
+	$(call download-and-decompress,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
 
 
 
