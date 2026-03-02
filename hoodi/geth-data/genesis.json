@@ -18,6 +18,8 @@
     "curieBlock": 0,
     "terminalTotalDifficulty": 0,
     "morph203Time": 0,
+    "viridianTime": 1761544800,
+    "emeraldTime": 1766988000,
     "morph": {
       "useZktrie": true,
       "maxTxPayloadBytesPerBlock": 122880,
