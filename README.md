@@ -96,7 +96,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260210-1](https://snapshot.morphl2.io/mainnet/snapshot-20260210-1.tar.gz) | 24424695                | 24424698            | 20674922       |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/mainnet/snapshot-20260123-1.tar.gz) | 24294756                | 24280251            | 20169165       |
 
-
 **For hoodi testnet**:
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
@@ -105,7 +104,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/hoodi/snapshot-20260123-1.tar.gz) | 2087054                 | 2076510             | 2767603        |
 
-3713448
 **For holesky testnet(legacy)**:
 
 |    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
