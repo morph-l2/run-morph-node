@@ -92,12 +92,10 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20260210-1](https://snapshot.morphl2.io/mainnet/snapshot-20260304-1.tar.gz) | 24582164                | 24582123            | 21195806      |
 | [snapshot-20260210-1](https://snapshot.morphl2.io/mainnet/snapshot-20260210-1.tar.gz) | 24424695                | 24424698            | 20674922       |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/mainnet/snapshot-20260123-1.tar.gz) | 24294756                | 24280251            | 20169165       |
-| [snapshot-20260108-1](https://snapshot.morphl2.io/mainnet/snapshot-20260108-1.tar.gz) | 24188158                | 24187100            | 19751115       |
 
-
-mainnet/snapshot-20260210-1.tar.gz  
 
 **For hoodi testnet**:
 
