@@ -9,7 +9,7 @@ MORPH_FLAG=${MORPH_FLAG:-"morph"}
 
 COMMAND="geth \
 --$MORPH_FLAG \
---morph-mpt
+--morph-mpt \
 --datadir="./db" \
 --verbosity=3 \
 --http \
