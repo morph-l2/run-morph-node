@@ -96,25 +96,27 @@ cp snapshot.env.example snapshot-mainnet-mpt.env
 
 同时建议在 repo Settings → General 中开启 **"Automatically delete head branches"**，PR merge 后分支自动删除，无需手动维护。
 
-### 3. 配置 cron job
+### 3. 配置定时任务（PM2）
 
-每个环境 / 快照类型各添加一条 cron 记录：
+复制 ecosystem 模板，修改 `ENV_FILE` 和 `script` 路径后启动：
 
 ```bash
-crontab -e
+cp /data/run-morph-node/ops/snapshot/ecosystem.config.js.example /data/morph-hoodi/ecosystem.config.js
+# 编辑 ecosystem.config.js
 ```
 
-```cron
-REPO=/data/run-morph-node/ops/snapshot
+启动并持久化：
 
-# mainnet 标准 snapshot（使用默认的 snapshot.env）
-0 2 1,15 * * python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet.log 2>&1
+```bash
+pm2 start /data/morph-hoodi/ecosystem.config.js
+pm2 save
+```
 
-# mainnet mpt-snapshot（env 文件中设置 SNAPSHOT_PREFIX=mpt-snapshot）
-0 3 1,15 * * ENV_FILE=$REPO/snapshot-mainnet-mpt.env python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet-mpt.log 2>&1
+手动触发测试：
 
-# hoodi
-0 2 1,15 * * ENV_FILE=$REPO/snapshot-hoodi.env python3 $REPO/snapshot_make.py >> /var/log/snapshot-hoodi.log 2>&1
+```bash
+pm2 restart snapshot-hoodi
+pm2 logs snapshot-hoodi
 ```
 
 ### 4. 启动 metrics server

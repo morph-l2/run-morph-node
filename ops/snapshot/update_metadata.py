@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Fetch snapshot metadata from the indexer API and update README.md via GitHub API.
 
@@ -48,10 +49,10 @@ import urllib.request
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-INDEXER_HOSTS = {
-    "mainnet": "explorer-indexer.morphl2.io",
-    "hoodi":   "explorer-indexer-hoodi.morphl2.io",
-    "holesky": "explorer-indexer-holesky.morphl2.io",
+INDEXER_BASE_URLS = {
+    "mainnet": "https://explorer-indexer.morphl2.io",
+    "hoodi":   "https://explorer-indexer-hoodi.morphl2.io",
+    "holesky": "https://explorer-indexer-holesky.morphl2.io",
 }
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -110,10 +111,13 @@ def http_put(url: str, payload: dict, token: str) -> dict:
 
 def fetch_metadata(environment: str, base_height: str) -> tuple[str, str]:
     """Return (l1_msg_start_height, derivation_start_height) as strings."""
-    host = INDEXER_HOSTS[environment]
+    # INDEXER_URL overrides the default public URL, useful for internal/intranet access.
+    base_url = os.environ.get("EXPLORER_INDEXER_URL", INDEXER_BASE_URLS.get(environment, ""))
+    if not base_url:
+        raise RuntimeError(f"No indexer URL for environment {environment!r}. Set INDEXER_URL.")
 
     def get(path):
-        url = f"https://{host}{path}"
+        url = f"{base_url.rstrip('/')}{path}"
         print(f"  GET {url}")
         return http_get(url)
 
@@ -241,8 +245,8 @@ def main() -> None:
     repo          = os.environ.get("GITHUB_REPOSITORY", "")
     readme_path   = os.environ.get("README_PATH", "README.md")
 
-    if environment not in INDEXER_HOSTS:
-        print(f"ERROR: Unknown environment: {environment!r}. Must be: {' | '.join(INDEXER_HOSTS)}",
+    if environment not in INDEXER_BASE_URLS:
+        print(f"ERROR: Unknown environment: {environment!r}. Must be: {' | '.join(INDEXER_BASE_URLS)}",
               file=sys.stderr)
         sys.exit(1)
 

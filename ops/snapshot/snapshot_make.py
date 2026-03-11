@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 ops/snapshot/snapshot_make.py
 
@@ -14,25 +15,13 @@ Responsibilities:
 
 Setup:
   1. Clone the repo to /data/run-morph-node on the node server
-  2. Copy ops/snapshot/snapshot.env.example to ops/snapshot/snapshot.env and fill in values
-     For multiple environments/types, use separate files and pass via ENV_FILE:
+  2. Copy ops/snapshot/snapshot.env.example for each environment and fill in values:
        cp ops/snapshot/snapshot.env.example ops/snapshot/snapshot-mainnet.env
        cp ops/snapshot/snapshot.env.example ops/snapshot/snapshot-hoodi.env
 
-  3. Add to crontab (one entry per environment / snapshot type):
-
-     REPO=/data/run-morph-node/ops/snapshot
-
-     # mainnet standard snapshot (uses default snapshot.env)
-     0 2 1,15 * * python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet.log 2>&1
-
-     # mainnet mpt-snapshot
-     0 3 1,15 * * ENV_FILE=$REPO/snapshot-mainnet-mpt.env \
-       python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet-mpt.log 2>&1
-
-     # hoodi
-     0 2 1,15 * * ENV_FILE=$REPO/snapshot-hoodi.env \
-       python3 $REPO/snapshot_make.py >> /var/log/snapshot-hoodi.log 2>&1
+  3. Copy ecosystem.config.js.example, set ENV_FILE and script path, then:
+       pm2 start /data/morph-hoodi/ecosystem.config.js
+       pm2 save
 """
 
 import json
@@ -111,10 +100,18 @@ def main() -> None:
         print("ERROR: S3_BUCKET is required", file=sys.stderr)
         sys.exit(1)
 
-    geth_data_dir     = os.path.join(morph_home, "geth-data")
-    node_data_dir     = os.path.join(morph_home, "node-data")
-    work_dir          = os.environ.get("SNAPSHOT_WORK_DIR", "/data/snapshot_work")
-    snapshot_file     = os.environ.get("SNAPSHOT_FILE", "/data/snapshot.tar.gz")
+    # GETH_DB_DIR / NODE_DB_DIR point directly to the directories that will be
+    # packed into the snapshot (as geth/ and data/ respectively).
+    # Use `or` so that empty-string values in the env file also fall back to defaults.
+    geth_db_dir   = os.environ.get("GETH_DB_DIR") or os.path.join(morph_home, "geth-data")
+    node_db_dir   = os.environ.get("NODE_DB_DIR") or os.path.join(morph_home, "node-data", "data")
+
+    # All temp files live under SNAPSHOT_WORK_DIR:
+    #   staging/  — copytree target, deleted after compression
+    #   snapshot.tar.gz — compressed output, deleted after S3 upload
+    work_base     = os.environ.get("SNAPSHOT_WORK_DIR") or "/data/snapshot_work"
+    work_dir      = os.path.join(work_base, "staging")
+    snapshot_file = os.path.join(work_base, "snapshot.tar.gz")
 
     # SNAPSHOT_PREFIX allows different snapshot types to coexist:
     # e.g. "snapshot", "mpt-snapshot", "full-snapshot"
@@ -154,8 +151,8 @@ def main() -> None:
         if os.path.exists(work_dir):
             shutil.rmtree(work_dir)
         os.makedirs(work_dir)
-        shutil.copytree(os.path.join(geth_data_dir, "geth"), os.path.join(work_dir, "geth"))
-        shutil.copytree(os.path.join(node_data_dir, "data"), os.path.join(work_dir, "data"))
+        shutil.copytree(geth_db_dir, os.path.join(work_dir, "geth"))
+        shutil.copytree(node_db_dir, os.path.join(work_dir, "data"))
 
         print(f"Compressing to {snapshot_file}...")
         run(["tar", "-czf", snapshot_file, "-C", work_dir, "."])
@@ -168,12 +165,15 @@ def main() -> None:
         s3_key = f"{environment}/{snapshot_name}.tar.gz"
         run(["aws", "s3", "cp", snapshot_file, f"s3://{s3_bucket}/{s3_key}", "--no-progress"])
         print(f"✅ Uploaded: s3://{s3_bucket}/{s3_key}")
+        os.remove(snapshot_file)
+        print(f"✅ Removed local snapshot file: {snapshot_file}")
 
         # ── Step 4: Start geth, collect base_height ───────────────────────────
         print("\n[4/6] Starting morph-geth and collecting base_height...")
         run(["pm2", "start", "morph-geth"])
+        geth_rpc = os.environ.get("GETH_RPC") or "http://127.0.0.1:8545"
         print("Waiting for geth RPC to be ready...")
-        base_height = get_block_height()
+        base_height = get_block_height(geth_rpc)
         os.environ["BASE_HEIGHT"] = str(base_height)
         print(f"✅ Geth base height: {base_height}")
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """
 Lightweight Prometheus metrics HTTP server for morph snapshot automation.
 

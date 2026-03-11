@@ -95,25 +95,27 @@ All available variables are documented in [`snapshot.env.example`](./snapshot.en
 
 Also recommended: enable **"Automatically delete head branches"** under repo Settings → General. Branches will be deleted automatically after a PR is merged.
 
-### 3. Configure the Cron Job
+### 3. Configure the Scheduled Job (PM2)
 
-Add one entry per environment / snapshot type:
+Copy the ecosystem template and edit `ENV_FILE` and `script` path for your environment:
 
 ```bash
-crontab -e
+cp /data/run-morph-node/ops/snapshot/ecosystem.config.js.example /data/morph-hoodi/ecosystem.config.js
+# edit ecosystem.config.js
 ```
 
-```cron
-REPO=/data/run-morph-node/ops/snapshot
+Start and persist:
 
-# mainnet standard snapshot (uses default snapshot.env)
-0 2 1,15 * * python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet.log 2>&1
+```bash
+pm2 start /data/morph-hoodi/ecosystem.config.js
+pm2 save
+```
 
-# mainnet mpt-snapshot
-0 3 1,15 * * ENV_FILE=$REPO/snapshot-mainnet-mpt.env python3 $REPO/snapshot_make.py >> /var/log/snapshot-mainnet-mpt.log 2>&1
+To trigger manually for testing:
 
-# hoodi
-0 2 1,15 * * ENV_FILE=$REPO/snapshot-hoodi.env python3 $REPO/snapshot_make.py >> /var/log/snapshot-hoodi.log 2>&1
+```bash
+pm2 restart snapshot-hoodi
+pm2 logs snapshot-hoodi
 ```
 
 ### 4. Start the Metrics Server
