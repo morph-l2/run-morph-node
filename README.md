@@ -47,6 +47,16 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-hoodi-snapshot
     ```
 
+- For MPT node (mainnet or Hoodi testnet), download the MPT-specific snapshot:
+
+    ```bash
+    make download-and-decompress-mainnet-mpt-snapshot
+    ```
+    or
+    ```bash
+    make download-and-decompress-hoodi-mpt-snapshot
+    ```
+
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.
     - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
         ```
@@ -80,7 +90,17 @@ Before setting up a Morph node, ensure you have the following installed:
 
     ```bash
     make run-hoodi-node
-    ```   
+    ```
+
+  For MPT node, run
+
+    ```bash
+    make run-mainnet-mpt-node
+    ```
+    or
+    ```bash
+    make run-hoodi-mpt-node
+    ```
 
 - This command will set up and run the node based on the configurations specified in your .env file.
 
@@ -106,6 +126,16 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260108-1](https://snapshot.morphl2.io/hoodi/snapshot-20260108-1.tar.gz) | 1988223                 | 1985849             | 2431455        |
 | [snapshot-20251209-1](https://snapshot.morphl2.io/hoodi/snapshot-20251209-1.tar.gz) | 1787123                 | 1786515             | 1774247        |
 
+
+**For mainnet MPT node**:
+
+| Snapshot Name | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:--------------|:------------------------|:--------------------|:---------------|
+
+**For hoodi testnet MPT node**:
+
+| Snapshot Name | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
+|:--------------|:------------------------|:--------------------|:---------------|
 
 **For holesky testnet(legacy)**:
 
