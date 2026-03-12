@@ -128,6 +128,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------|:------------------------|:--------------------|:---------------|
+| [snapshot-20260312-1](https://snapshot.morphl2.io/mainnet/mpt-snapshot-20260312-1.tar.gz) | 24639293                | 24637932            | 21382556      |
 
 **For hoodi testnet MPT node**:
 
