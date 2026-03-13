@@ -120,6 +120,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [mpt-snapshot-archive-20260313-1](https://snapshot.morphl2.io/hoodi/mpt-snapshot-archive-20260313-1.tar.gz) | 2408275 | 2407874 | 3929217 |
 | [snapshot-20260304-1](https://snapshot.morphl2.io/hoodi/snapshot-20260304-1.tar.gz) | 2349111                 | 2346416             | 3713448        |
 | [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
 | [snapshot-20260123-1](https://snapshot.morphl2.io/hoodi/snapshot-20260123-1.tar.gz) | 2087054                 | 2076510             | 2767603        |
