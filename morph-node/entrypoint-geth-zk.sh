@@ -5,11 +5,10 @@ if [ ! -f /jwt-secret.txt ]; then
     exit 1
 fi
 
-MORPH_FLAG=${MORPH_FLAG:-"morph"}
+MORPH_FLAG=${MORPH_FLAG:-"morph"} 
 
 COMMAND="geth \
 --$MORPH_FLAG \
---morph-mpt \
 --datadir="./db" \
 --verbosity=3 \
 --http \
