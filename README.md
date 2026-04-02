@@ -131,13 +131,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260304-1](https://snapshot.morphl2.io/hoodi/snapshot-20260304-1.tar.gz) | 2349111                 | 2346416             | 3713448        |
 | [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
 
-**For holesky testnet(legacy)**:
-
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------------|:------------------------|:--------------------|:--------------------|
-|[snapshot-20250903-1](https://snapshot.morphl2.io/holesky/snapshot-20250903-1.tar.gz)|4445350|4445989|19741862|
-|[snapshot-20250818-1](https://snapshot.morphl2.io/holesky/snapshot-20250818-1.tar.gz)|4360545|4359976|19432113|
-|[snapshot-20250428-1](https://snapshot.morphl2.io/holesky/snapshot-20250428-1.tar.gz)|3748991|3748974|17193670|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
