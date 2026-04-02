@@ -14,15 +14,35 @@ Environment variables:
 import http.server
 import os
 import socket
+import time
 
 METRICS_FILE = os.environ.get("METRICS_FILE", "/tmp/morph_snapshot_metrics.prom")
 PORT = int(os.environ.get("METRICS_PORT", "6060"))
 
-EMPTY_METRICS = (
-    "# HELP morph_snapshot_readme_update_status 1 if last README update succeeded, 0 if failed\n"
-    "# TYPE morph_snapshot_readme_update_status gauge\n"
-    "# (no data yet — update_readme.sh has not run)\n"
-)
+
+def _default_metrics() -> str:
+    """Default metrics written on first startup — status=1 to avoid false alarms."""
+    environment = os.environ.get("ENVIRONMENT", "unknown")
+    ts = int(time.time())
+    return (
+        "# HELP morph_snapshot_readme_update_status 1 if last README update succeeded, 0 if failed\n"
+        "# TYPE morph_snapshot_readme_update_status gauge\n"
+        f'morph_snapshot_readme_update_status{{environment="{environment}",snapshot="pending"}} 1\n'
+        "# HELP morph_snapshot_readme_update_timestamp_seconds Unix timestamp of last run\n"
+        "# TYPE morph_snapshot_readme_update_timestamp_seconds gauge\n"
+        f'morph_snapshot_readme_update_timestamp_seconds{{environment="{environment}",snapshot="pending"}} {ts}\n'
+    )
+
+
+def _init_metrics_file() -> None:
+    """Write default metrics if file does not exist yet."""
+    if not os.path.exists(METRICS_FILE):
+        try:
+            with open(METRICS_FILE, "w") as f:
+                f.write(_default_metrics())
+            print(f"Initialized default metrics: {METRICS_FILE}")
+        except OSError as e:
+            print(f"WARNING: could not initialize metrics file: {e}")
 
 
 class MetricsHandler(http.server.BaseHTTPRequestHandler):
@@ -52,6 +72,7 @@ class MetricsHandler(http.server.BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    _init_metrics_file()
     server = http.server.HTTPServer(("0.0.0.0", PORT), MetricsHandler)
     host = socket.gethostname()
     print(f"morph-snapshot metrics server listening on http://{host}:{PORT}/metrics")

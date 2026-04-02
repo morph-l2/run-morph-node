@@ -42,7 +42,6 @@ Usage:
 import base64
 import json
 import os
-import re
 import sys
 import urllib.error
 import urllib.request
@@ -72,7 +71,10 @@ def _http_request(req: urllib.request.Request, url: str) -> dict:
 
 
 def http_get(url: str, token: str = "") -> dict:
-    headers = {"Accept": "application/json"}
+    headers = {
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (compatible; morph-snapshot/1.0)",
+    }
     if token:
         headers["Authorization"] = f"Bearer {token}"
     return _http_request(urllib.request.Request(url, headers=headers), url)
@@ -124,12 +126,22 @@ def fetch_metadata(environment: str, base_height: str) -> tuple[str, str]:
     l1_data    = get(f"/v1/batch/l1_msg_start_height/{base_height}")
     deriv_data = get(f"/v1/batch/derivation_start_height/{base_height}")
 
-    if "l1_msg_start_height" not in l1_data:
+    # API may return a plain number or a dict like {"l1_msg_start_height": N}
+    if isinstance(l1_data, (int, float)):
+        l1_msg_height = str(int(l1_data))
+    elif isinstance(l1_data, dict) and "l1_msg_start_height" in l1_data:
+        l1_msg_height = str(l1_data["l1_msg_start_height"])
+    else:
         raise RuntimeError(f"Unexpected indexer response for l1_msg_start_height: {l1_data}")
-    if "derivation_start_height" not in deriv_data:
+
+    if isinstance(deriv_data, (int, float)):
+        deriv_height = str(int(deriv_data))
+    elif isinstance(deriv_data, dict) and "derivation_start_height" in deriv_data:
+        deriv_height = str(deriv_data["derivation_start_height"])
+    else:
         raise RuntimeError(f"Unexpected indexer response for derivation_start_height: {deriv_data}")
 
-    return str(l1_data["l1_msg_start_height"]), str(deriv_data["derivation_start_height"])
+    return l1_msg_height, deriv_height
 
 # ── GitHub API ────────────────────────────────────────────────────────────────
 
@@ -158,22 +170,20 @@ def gh_branch_exists(repo: str, branch: str, token: str) -> bool:
 
 def resolve_snapshot_name(repo: str, environment: str,
                           snapshot_name: str, token: str) -> str:
-    """Return a snapshot_name whose branch does not yet exist on GitHub.
+    """Verify that the snapshot branch does not already exist on GitHub.
 
-    Increments the trailing -N suffix until a free branch is found, so that
-    snapshot_name, S3 key, README row, and branch name all stay in sync.
-
-    e.g. snapshot-20260309-1 → snapshot-20260309-2 if the -1 branch exists.
+    Each date should have exactly one snapshot. If the branch for snapshot_name
+    already exists it means today's snapshot was already created — raise an error
+    instead of silently creating a -2 duplicate.
     """
-    base_name = re.sub(r"-\d+$", "", snapshot_name)
-    counter   = 1
-    candidate = f"{base_name}-{counter}"
-    while gh_branch_exists(repo, f"snapshot/{environment}-{candidate}", token):
-        counter  += 1
-        candidate = f"{base_name}-{counter}"
-    if candidate != snapshot_name:
-        print(f"  Branch for {snapshot_name} already exists → using {candidate}")
-    return candidate
+    branch = f"snapshot/{environment}-{snapshot_name}"
+    if gh_branch_exists(repo, branch, token):
+        raise RuntimeError(
+            f"Branch '{branch}' already exists on GitHub.\n"
+            f"  Today's snapshot ({snapshot_name}) has already been created.\n"
+            f"  If you need to re-run, delete the branch first or use a different SNAPSHOT_PREFIX."
+        )
+    return snapshot_name
 
 
 def gh_create_branch(repo: str, branch: str, sha: str, token: str) -> None:
@@ -226,6 +236,8 @@ def apply_readme_update(content: str, environment: str, snapshot_name: str,
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    from update_readme import write_metric  # noqa: E402
+
     dry_run = os.environ.get("DRY_RUN", "0") == "1"
 
     # Validate required env vars
@@ -250,52 +262,59 @@ def main() -> None:
               file=sys.stderr)
         sys.exit(1)
 
-    # ── Step 1: metadata ──────────────────────────────────────────────────────
-    l1_msg_height = os.environ.get("L1_MSG_HEIGHT", "")
-    deriv_height  = os.environ.get("DERIV_HEIGHT", "")
+    try:
+        # ── Step 1: metadata ──────────────────────────────────────────────────
+        l1_msg_height = os.environ.get("L1_MSG_HEIGHT", "")
+        deriv_height  = os.environ.get("DERIV_HEIGHT", "")
 
-    if l1_msg_height and deriv_height:
-        print(f"\n[1/3] Using provided metadata (API call skipped):")
-    else:
-        print(f"\n[1/3] Fetching metadata from indexer (base_height={base_height}) ...")
-        l1_msg_height, deriv_height = fetch_metadata(environment, base_height)
+        if l1_msg_height and deriv_height:
+            print(f"\n[1/3] Using provided metadata (API call skipped):")
+        else:
+            print(f"\n[1/3] Fetching metadata from indexer (base_height={base_height}) ...")
+            l1_msg_height, deriv_height = fetch_metadata(environment, base_height)
 
-    print(f"      l1_msg_start_height      = {l1_msg_height}")
-    print(f"      derivation_start_height  = {deriv_height}")
+        print(f"      l1_msg_start_height      = {l1_msg_height}")
+        print(f"      derivation_start_height  = {deriv_height}")
 
-    if dry_run:
-        print("\n[DRY RUN] Skipping README update and PR creation.")
-        print(f"          Would insert: env={environment} snapshot={snapshot_name}")
-        print(f"          base={base_height} l1_msg={l1_msg_height} deriv={deriv_height}")
-        return
+        if dry_run:
+            print("\n[DRY RUN] Skipping README update and PR creation.")
+            print(f"          Would insert: env={environment} snapshot={snapshot_name}")
+            print(f"          base={base_height} l1_msg={l1_msg_height} deriv={deriv_height}")
+            return
 
-    # ── Step 2: update README in memory, push via GitHub API ─────────────────
-    print(f"\n[2/3] Updating README via GitHub API ...")
-    current_content, blob_sha = gh_get_file(repo, readme_path, token)
-    updated_content           = apply_readme_update(
-        current_content, environment, snapshot_name, deriv_height, l1_msg_height, base_height
-    )
+        # ── Step 2: update README in memory, push via GitHub API ─────────────
+        print(f"\n[2/3] Updating README via GitHub API ...")
+        current_content, blob_sha = gh_get_file(repo, readme_path, token)
+        updated_content           = apply_readme_update(
+            current_content, environment, snapshot_name, deriv_height, l1_msg_height, base_height
+        )
 
-    branch     = f"snapshot/{environment}-{snapshot_name}"
-    commit_msg = f"snapshot: add {snapshot_name} ({environment})"
-    main_sha   = gh_get_main_sha(repo, token)
+        branch     = f"snapshot/{environment}-{snapshot_name}"
+        commit_msg = f"snapshot: add {snapshot_name} ({environment})"
+        main_sha   = gh_get_main_sha(repo, token)
 
-    gh_create_branch(repo, branch, main_sha, token)
-    gh_update_file(repo, readme_path, updated_content, blob_sha, branch, commit_msg, token)
+        gh_create_branch(repo, branch, main_sha, token)
+        gh_update_file(repo, readme_path, updated_content, blob_sha, branch, commit_msg, token)
 
-    # ── Step 3: open PR ───────────────────────────────────────────────────────
-    print(f"\n[3/3] Creating PR ...")
-    pr_body = (
-        f"Auto-generated by snapshot workflow.\n\n"
-        f"- Environment: `{environment}`\n"
-        f"- Snapshot: `{snapshot_name}`\n"
-        f"- L2 Base Height: `{base_height}`\n"
-        f"- L1 Msg Start Height: `{l1_msg_height}`\n"
-        f"- Derivation Start Height: `{deriv_height}`"
-    )
-    pr_url = gh_create_pr(repo, branch, commit_msg, pr_body, token)
+        # ── Step 3: open PR ───────────────────────────────────────────────────
+        print(f"\n[3/3] Creating PR ...")
+        pr_body = (
+            f"Auto-generated by snapshot workflow.\n\n"
+            f"- Environment: `{environment}`\n"
+            f"- Snapshot: `{snapshot_name}`\n"
+            f"- L2 Base Height: `{base_height}`\n"
+            f"- L1 Msg Start Height: `{l1_msg_height}`\n"
+            f"- Derivation Start Height: `{deriv_height}`"
+        )
+        pr_url = gh_create_pr(repo, branch, commit_msg, pr_body, token)
 
-    print(f"\n✅ Done. PR opened: {pr_url}")
+        print(f"\n✅ Done. PR opened: {pr_url}")
+        write_metric(1, environment, snapshot_name)
+
+    except Exception as e:
+        print(f"\nERROR: {e}", file=sys.stderr)
+        write_metric(0, environment, snapshot_name)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

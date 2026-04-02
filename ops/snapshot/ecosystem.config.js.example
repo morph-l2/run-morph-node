@@ -1,0 +1,39 @@
+// PM2 ecosystem config for snapshot automation.
+//
+// Setup:
+//   1. Copy this file to the node server:
+//        cp ops/snapshot/ecosystem.config.js.example /data/morph-hoodi/ecosystem.config.js
+//   2. Edit paths and ENV_FILE to match the environment.
+//   3. Start:
+//        pm2 start /data/morph-hoodi/ecosystem.config.js
+//        pm2 save
+
+module.exports = {
+  apps: [
+    {
+      name: 'snapshot-hoodi',
+      script: '/data/morph-hoodi/snapshot_make.py',
+      interpreter: 'python3',
+      // 13th and 28th of each month at 15:30 CST (= 07:30 UTC)
+      cron_restart: '30 7 13,28 * *',
+      autorestart: false,
+      // Give morph-geth enough time to flush the snapshot journal before
+      // being force-killed (default is 1600ms which is too short).
+      // This prevents "diffs=missing" errors on the next prune-state run.
+      kill_timeout: 60000,
+      env: {
+        ENV_FILE: '/data/morph-hoodi/snapshot.env',
+      },
+    },
+    {
+      name: 'morph-snapshot-metrics',
+      script: '/data/morph-hoodi/metrics_server.py',
+      interpreter: 'python3',
+      autorestart: true,
+      env: {
+        METRICS_PORT: '6060',
+        ENVIRONMENT: 'hoodi',
+      },
+    },
+  ],
+};
