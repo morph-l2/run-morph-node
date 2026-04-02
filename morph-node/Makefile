@@ -23,9 +23,15 @@ generate-jwt-hoodi:
 
 ## node management
 run-node: generate-jwt
+	@echo "You are about to run a Mainnet MPT node."
+	@echo "To run a ZK (legacy) node instead, use: make run-zk-node"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env up node &
 
 run-hoodi-node: generate-jwt-hoodi
+	@echo "You are about to run a Hoodi MPT node."
+	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env_hoodi up node &
 
 run-holesky-node: generate-jwt-holesky
@@ -51,9 +57,15 @@ rm-node:
 
 ## validator management
 run-validator: generate-jwt
+	@echo "You are about to run a Mainnet MPT validator."
+	@echo "To run a ZK (legacy) validator instead, use: make run-zk-validator"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env up validator &
 
 run-hoodi-validator: generate-jwt-hoodi
+	@echo "You are about to run a Hoodi MPT validator."
+	@echo "To run a ZK (legacy) validator instead, use: make run-hoodi-zk-validator"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env_hoodi up validator &
 
 run-holesky-validator: generate-jwt-holesky
