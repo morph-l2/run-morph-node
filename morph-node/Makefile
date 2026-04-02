@@ -65,6 +65,22 @@ stop-validator:
 rm-validator:
 	docker rm validator-node morph-geth
 
+## build from source (requires Go)
+build-geth:
+	@echo "Building geth from source (go-ethereum@morph-v2.2.1)..."
+	cd ../go-ethereum && make geth
+	cp ../go-ethereum/build/bin/geth ./bin/geth
+	@echo "geth binary copied to morph-node/bin/geth"
+
+build-morphnode:
+	@echo "Building morphnode from source (morph@v0.5.3)..."
+	cd ../morph/node && make morphnode
+	cp ../morph/node/build/bin/morphnode ./bin/morphnode
+	@echo "morphnode binary copied to morph-node/bin/morphnode"
+
+build: build-geth build-morphnode
+	@echo "All binaries built successfully."
+
 ## binary mode
 run-node-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT node (binary mode)."
