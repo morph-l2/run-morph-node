@@ -38,23 +38,23 @@ Before setting up a Morph node, ensure you have the following installed:
 - To expedite synchronization, download the latest snapshot:
 
     ```bash
-    make download-and-decompress-mainnet-mpt-snapshot
+    make download-and-decompress-mainnet-snapshot
     ```
 
 - For Hoodi testnet, use the corresponding command:
 
     ```bash
-    make download-and-decompress-hoodi-mpt-snapshot
+    make download-and-decompress-hoodi-snapshot
     ```
 
 - For ZK node (legacy), download the ZK-specific snapshot:
 
     ```bash
-    make download-and-decompress-mainnet-snapshot
+    make download-and-decompress-mainnet-zk-snapshot
     ```
     or
     ```bash
-    make download-and-decompress-hoodi-snapshot
+    make download-and-decompress-hoodi-zk-snapshot
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.

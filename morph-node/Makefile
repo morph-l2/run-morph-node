@@ -97,17 +97,17 @@ endef
 
 # Targets
 
-download-and-decompress-hoodi-snapshot:
-	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
-
 download-and-decompress-mainnet-snapshot:
-	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+	$(call download-and-decompress,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
 
-download-and-decompress-hoodi-mpt-snapshot:
+download-and-decompress-hoodi-snapshot:
 	$(call download-and-decompress,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
 
-download-and-decompress-mainnet-mpt-snapshot:
-	$(call download-and-decompress,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+download-and-decompress-mainnet-zk-snapshot:
+	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+
+download-and-decompress-hoodi-zk-snapshot:
+	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
 
 
 
