@@ -1,33 +1,38 @@
 #!/bin/sh
 
-if [ ! -f /jwt-secret.txt ]; then
-    echo "Error: jwt-secret.txt not found. Please create it before starting the service."
+GETH_BIN=${GETH_BINARY:-geth}
+GETH_DATADIR=${GETH_DATADIR:-./db}
+JWT_PATH=${JWT_SECRET_PATH:-/jwt-secret.txt}
+
+if [ ! -f "${JWT_PATH}" ]; then
+    echo "Error: jwt-secret.txt not found at ${JWT_PATH}."
+    echo "Please create it before starting the service."
     exit 1
 fi
 
-MORPH_FLAG=${MORPH_FLAG:-"morph"} 
+MORPH_FLAG=${MORPH_FLAG:-"morph"}
 
-COMMAND="geth \
---$MORPH_FLAG \
---datadir="./db" \
+COMMAND="${GETH_BIN} \
+--${MORPH_FLAG} \
+--datadir=${GETH_DATADIR} \
 --verbosity=3 \
 --http \
---http.corsdomain="*" \
---http.vhosts="*" \
+--http.corsdomain=\"*\" \
+--http.vhosts=\"*\" \
 --http.addr=0.0.0.0 \
 --http.port=8545 \
 --http.api=web3,debug,eth,txpool,net,morph,engine,admin \
 --ws \
 --ws.addr=0.0.0.0 \
 --ws.port=8546 \
---ws.origins="*" \
+--ws.origins=\"*\" \
 --ws.api=web3,debug,eth,txpool,net,morph,engine,admin \
 --authrpc.addr=0.0.0.0 \
 --authrpc.port=8551 \
---authrpc.vhosts="*" \
---authrpc.jwtsecret="./jwt-secret.txt" \
+--authrpc.vhosts=\"*\" \
+--authrpc.jwtsecret=${JWT_PATH} \
 --gcmode=archive \
---log.filename=./db/geth.log \
+--log.filename=${GETH_DATADIR}/geth.log \
 --metrics \
 --metrics.addr=0.0.0.0"
 

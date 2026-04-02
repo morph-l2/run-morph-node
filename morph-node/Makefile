@@ -63,7 +63,46 @@ stop-validator:
 	docker stop validator-node morph-geth
 
 rm-validator:
-	docker rm validator-node morph-geth	
+	docker rm validator-node morph-geth
+
+## binary mode
+run-node-binary: generate-jwt
+	@echo "You are about to run a Mainnet MPT node (binary mode)."
+	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	sh ./run-binary.sh node .env
+
+run-hoodi-node-binary: generate-jwt-hoodi
+	@echo "You are about to run a Hoodi MPT node (binary mode)."
+	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	sh ./run-binary.sh node .env_hoodi
+
+run-validator-binary: generate-jwt
+	@echo "You are about to run a Mainnet MPT validator (binary mode)."
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	sh ./run-binary.sh validator .env
+
+run-hoodi-validator-binary: generate-jwt-hoodi
+	@echo "You are about to run a Hoodi MPT validator (binary mode)."
+	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	sh ./run-binary.sh validator .env_hoodi
+
+run-zk-node-binary: generate-jwt
+	sh ./run-binary.sh node .env .env_zk
+
+run-hoodi-zk-node-binary: generate-jwt-hoodi
+	sh ./run-binary.sh node .env_hoodi .env_hoodi_zk
+
+run-zk-validator-binary: generate-jwt
+	sh ./run-binary.sh validator .env .env_zk
+
+run-hoodi-zk-validator-binary: generate-jwt-hoodi
+	sh ./run-binary.sh validator .env_hoodi .env_hoodi_zk
+
+stop-binary:
+	@if [ -f .geth.pid ]; then kill $$(cat .geth.pid) 2>/dev/null; rm -f .geth.pid; echo "geth stopped."; fi
+	@if [ -f .node.pid ]; then kill $$(cat .node.pid) 2>/dev/null; rm -f .node.pid; echo "morphnode stopped."; fi
 
 
 # Common function for download and decompress
