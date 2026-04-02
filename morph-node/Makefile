@@ -33,12 +33,6 @@ run-zk-node: generate-jwt
 run-hoodi-zk-node: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up node &
 
-run-hoodi-mpt-node: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi up node &
-
-run-mainnet-mpt-node: generate-jwt
-	docker-compose --env-file .env up node &
-
 stop-node:
 	docker stop morph-node morph-geth
 
@@ -64,12 +58,6 @@ run-zk-validator: generate-jwt
 
 run-hoodi-zk-validator: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up validator &
-
-run-hoodi-mpt-validator: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi up validator &
-
-run-mainnet-mpt-validator: generate-jwt
-	docker-compose --env-file .env up validator &
 
 stop-validator:
 	docker stop validator-node morph-geth
