@@ -12,8 +12,6 @@ JWT_SECRET_FILE_HOLESKY := $(JWT_SECRET_FILE)
 
 JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 
-include .env_mpt
-
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
 
@@ -27,17 +25,23 @@ generate-jwt-hoodi:
 run-node: generate-jwt
 	docker-compose --env-file .env up node &
 
-run-holesky-node: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up node &
-
 run-hoodi-node: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up node &
 
+run-holesky-node: generate-jwt-holesky
+	docker-compose --env-file .env_holesky up node &
+
+run-zk-node: generate-jwt
+	docker-compose --env-file .env --env-file .env_zk up node &
+
+run-hoodi-zk-node: generate-jwt-hoodi
+	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up node &
+
 run-hoodi-mpt-node: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi --env-file .env_mpt up node &
+	docker-compose --env-file .env_hoodi up node &
 
 run-mainnet-mpt-node: generate-jwt
-	docker-compose --env-file .env --env-file .env_mpt up node &
+	docker-compose --env-file .env up node &
 
 stop-node:
 	docker stop morph-node morph-geth
@@ -49,17 +53,23 @@ rm-node:
 run-validator: generate-jwt
 	docker-compose --env-file .env up validator &
 
-run-holesky-validator: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up validator &
-
 run-hoodi-validator: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up validator &
 
+run-holesky-validator: generate-jwt-holesky
+	docker-compose --env-file .env_holesky up validator &
+
+run-zk-validator: generate-jwt
+	docker-compose --env-file .env --env-file .env_zk up validator &
+
+run-hoodi-zk-validator: generate-jwt-hoodi
+	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up validator &
+
 run-hoodi-mpt-validator: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi --env-file .env_mpt up validator &
+	docker-compose --env-file .env_hoodi up validator &
 
 run-mainnet-mpt-validator: generate-jwt
-	docker-compose --env-file .env --env-file .env_mpt up validator &
+	docker-compose --env-file .env up validator &
 
 stop-validator:
 	docker stop validator-node morph-geth
