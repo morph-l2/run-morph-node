@@ -71,29 +71,24 @@ submodule-init:
 	cd .. && git submodule update --init --recursive
 	@echo "Submodules ready."
 
-# Sync submodule versions to match Docker image versions in docker-compose.yml.
-# Run this whenever docker-compose.yml image versions are updated.
-sync-submodules:
-	$(eval GETH_VERSION := $(shell grep 'go-ethereum:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'))
-	$(eval NODE_VERSION := $(shell grep 'morph-l2/node:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1))
-	@echo "Syncing submodules to match docker-compose.yml:"
-	@echo "  go-ethereum → morph-v$(GETH_VERSION)"
-	@echo "  morph       → v$(NODE_VERSION)"
+# Update submodule versions and docker-compose.yml image tags in one shot.
+# Usage: make set-versions GETH_VERSION=2.2.1 NODE_VERSION=0.5.3
+set-versions:
 	cd ../go-ethereum && git fetch --tags && git checkout morph-v$(GETH_VERSION)
 	cd ../morph       && git fetch --tags && git checkout v$(NODE_VERSION)
+	sed -i 's|go-ethereum:[0-9.]*|go-ethereum:$(GETH_VERSION)|g' docker-compose.yml
+	sed -i 's|morph-l2/node:[0-9.]*|morph-l2/node:$(NODE_VERSION)|g' docker-compose.yml
 	cd .. && git add go-ethereum morph
-	@echo "Done. Commit with: git commit -m 'chore: sync submodules to geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
+	@echo "Done. Commit with: git commit -m 'chore: bump geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
 
 build-geth: submodule-init
-	$(eval GETH_VERSION := $(shell grep 'go-ethereum:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'))
-	@echo "Building geth from source (go-ethereum@morph-v$(GETH_VERSION))..."
+	@echo "Building geth from source..."
 	cd ../go-ethereum && make geth
 	cp ../go-ethereum/build/bin/geth ./bin/geth
 	@echo "geth binary copied to morph-node/bin/geth"
 
 build-morphnode: submodule-init
-	$(eval NODE_VERSION := $(shell grep 'morph-l2/node:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1))
-	@echo "Building morphnode from source (morph@v$(NODE_VERSION))..."
+	@echo "Building morphnode from source..."
 	cd ../morph/node && make morphnode
 	cp ../morph/node/build/bin/morphnode ./bin/morphnode
 	@echo "morphnode binary copied to morph-node/bin/morphnode"
