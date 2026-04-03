@@ -48,6 +48,15 @@ cleanup() {
 }
 trap cleanup INT TERM
 
+# Validate entrypoint file
+case "${GETH_ENTRYPOINT_FILE}" in
+    ./entrypoint-geth.sh|./entrypoint-geth-zk.sh) ;;
+    *)
+        echo "Error: invalid GETH_ENTRYPOINT_FILE: ${GETH_ENTRYPOINT_FILE}"
+        exit 1
+        ;;
+esac
+
 # Start geth
 echo "Starting geth..."
 GETH_BINARY=${GETH_BINARY} \
@@ -73,9 +82,15 @@ for i in $(seq 1 30); do
     sleep 1
 done
 
+if ! nc -z localhost 8551 2>/dev/null; then
+    echo "Error: geth did not become ready within 30 seconds."
+    cleanup
+    exit 1
+fi
+
 # Set validator mode
 if [ "${MODE}" = "validator" ]; then
-    NODE_EXTRA_FLAGS="--validator"
+    NODE_EXTRA_FLAGS="--validator ${NODE_EXTRA_FLAGS:-}"
 fi
 
 # Start morphnode

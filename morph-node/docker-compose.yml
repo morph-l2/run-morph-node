@@ -50,6 +50,7 @@ services:
 
   validator:
     container_name: validator_node
+    restart: unless-stopped
     depends_on:
       geth:
         condition: service_started
@@ -69,7 +70,7 @@ services:
       - MORPH_NODE_DERIVATION_BASE_HEIGHT=${L2_BASE_HEIGHT}
       - MORPH_NODE_SYNC_START_HEIGHT=${L1_MSG_START_HEIGHT}
       - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
-      - NODE_EXTRA_FLAGS=--validator
+      - NODE_EXTRA_FLAGS=--validator ${NODE_EXTRA_FLAGS:-}
     volumes:
       - "${MORPH_HOME}/node-data:/db"
       - "${JWT_SECRET_FILE}:/jwt-secret.txt"

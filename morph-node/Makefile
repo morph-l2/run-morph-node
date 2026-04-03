@@ -1,6 +1,6 @@
 include .env
 
-# Store the value of JWT_SECRET_FILE from .env
+# Capture mainnet JWT path before .env_hoodi overwrites MORPH_HOME (:= forces immediate expansion)
 JWT_SECRET_FILE_MAINNET := $(JWT_SECRET_FILE)
 
 include .env_hoodi
@@ -60,10 +60,10 @@ run-hoodi-zk-validator: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up validator &
 
 stop-validator:
-	docker stop validator-node morph-geth
+	docker stop validator_node morph-geth
 
 rm-validator:
-	docker rm validator-node morph-geth
+	docker rm validator_node morph-geth
 
 ## build from source (requires Go)
 submodule-init:
@@ -124,6 +124,59 @@ run-hoodi-zk-validator-binary: generate-jwt-hoodi
 stop-binary:
 	@if [ -f .geth.pid ]; then kill $$(cat .geth.pid) 2>/dev/null; rm -f .geth.pid; echo "geth stopped."; fi
 	@if [ -f .node.pid ]; then kill $$(cat .node.pid) 2>/dev/null; rm -f .node.pid; echo "morphnode stopped."; fi
+
+
+# Helper: download, extract, and move snapshot data into MORPH_HOME
+# $(1) = snapshot name, $(2) = download URL base, $(3) = MORPH_HOME
+define setup-snapshot-data
+	@if [ -d "$(3)/geth-data/geth/chaindata" ]; then \
+		echo "Snapshot data already in place at $(3), skipping setup."; \
+	else \
+		echo "Setting up snapshot data for $(3)..."; \
+		if [ ! -d "$(1)" ]; then \
+			if [ ! -f "$(1).tar.gz" ]; then \
+				echo "Downloading $(1).tar.gz from $(2)..."; \
+				wget -q --show-progress -O $(1).tar.gz $(2)/$(1).tar.gz || { echo "Error: download failed."; exit 1; }; \
+			else \
+				echo "Found existing $(1).tar.gz, skipping download."; \
+			fi; \
+			echo "Extracting $(1).tar.gz..."; \
+			tar -xzf $(1).tar.gz || { echo "Error: extraction failed."; exit 1; }; \
+			rm -f $(1).tar.gz; \
+		else \
+			echo "Found existing $(1)/ directory, skipping download."; \
+		fi; \
+		mkdir -p $(3)/geth-data $(3)/node-data/data; \
+		echo "Moving geth data to $(3)/geth-data/..."; \
+		mv $(1)/geth $(3)/geth-data/ || { echo "Error: failed to move geth data (may already exist)."; exit 1; }; \
+		echo "Moving node data to $(3)/node-data/data/..."; \
+		mv $(1)/data/* $(3)/node-data/data/ || { echo "Error: failed to move node data."; exit 1; }; \
+		rm -rf $(1); \
+		echo "Snapshot data ready at $(3)."; \
+	fi
+endef
+
+## quickstart targets (one-command setup and run)
+
+quickstart-hoodi-node: generate-jwt-hoodi
+	@echo "=== Quickstart: Hoodi Node (Docker) ==="
+	$(call setup-snapshot-data,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	docker-compose --env-file .env_hoodi up node
+
+quickstart-hoodi-node-binary: generate-jwt-hoodi build
+	@echo "=== Quickstart: Hoodi Node (Binary) ==="
+	$(call setup-snapshot-data,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	sh ./run-binary.sh node .env_hoodi
+
+quickstart-mainnet-node: generate-jwt
+	@echo "=== Quickstart: Mainnet Node (Docker) ==="
+	$(call setup-snapshot-data,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	docker-compose --env-file .env up node
+
+quickstart-mainnet-node-binary: generate-jwt build
+	@echo "=== Quickstart: Mainnet Node (Binary) ==="
+	$(call setup-snapshot-data,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	sh ./run-binary.sh node .env
 
 
 # Common function for download and decompress
