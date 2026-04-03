@@ -71,14 +71,29 @@ submodule-init:
 	cd .. && git submodule update --init --recursive
 	@echo "Submodules ready."
 
+# Sync submodule versions to match Docker image versions in docker-compose.yml.
+# Run this whenever docker-compose.yml image versions are updated.
+sync-submodules:
+	$(eval GETH_VERSION := $(shell grep 'go-ethereum:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'))
+	$(eval NODE_VERSION := $(shell grep 'morph-l2/node:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1))
+	@echo "Syncing submodules to match docker-compose.yml:"
+	@echo "  go-ethereum → morph-v$(GETH_VERSION)"
+	@echo "  morph       → v$(NODE_VERSION)"
+	cd ../go-ethereum && git fetch --tags && git checkout morph-v$(GETH_VERSION)
+	cd ../morph       && git fetch --tags && git checkout v$(NODE_VERSION)
+	cd .. && git add go-ethereum morph
+	@echo "Done. Commit with: git commit -m 'chore: sync submodules to geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
+
 build-geth: submodule-init
-	@echo "Building geth from source (go-ethereum@morph-v2.2.1)..."
+	$(eval GETH_VERSION := $(shell grep 'go-ethereum:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'))
+	@echo "Building geth from source (go-ethereum@morph-v$(GETH_VERSION))..."
 	cd ../go-ethereum && make geth
 	cp ../go-ethereum/build/bin/geth ./bin/geth
 	@echo "geth binary copied to morph-node/bin/geth"
 
 build-morphnode: submodule-init
-	@echo "Building morphnode from source (morph@v0.5.3)..."
+	$(eval NODE_VERSION := $(shell grep 'morph-l2/node:' docker-compose.yml | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1))
+	@echo "Building morphnode from source (morph@v$(NODE_VERSION))..."
 	cd ../morph/node && make morphnode
 	cp ../morph/node/build/bin/morphnode ./bin/morphnode
 	@echo "morphnode binary copied to morph-node/bin/morphnode"
