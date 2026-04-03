@@ -66,13 +66,18 @@ rm-validator:
 	docker rm validator-node morph-geth
 
 ## build from source (requires Go)
-build-geth:
+submodule-init:
+	@echo "Initializing git submodules..."
+	cd .. && git submodule update --init --recursive
+	@echo "Submodules ready."
+
+build-geth: submodule-init
 	@echo "Building geth from source (go-ethereum@morph-v2.2.1)..."
 	cd ../go-ethereum && make geth
 	cp ../go-ethereum/build/bin/geth ./bin/geth
 	@echo "geth binary copied to morph-node/bin/geth"
 
-build-morphnode:
+build-morphnode: submodule-init
 	@echo "Building morphnode from source (morph@v0.5.3)..."
 	cd ../morph/node && make morphnode
 	cp ../morph/node/build/bin/morphnode ./bin/morphnode
