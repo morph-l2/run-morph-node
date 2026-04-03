@@ -6,7 +6,7 @@ Update the snapshot table in README.md.
 Inserts a new row at the TOP of the target environment's snapshot table.
 
 Environment variables:
-  ENVIRONMENT    - mainnet | hoodi | holesky
+  ENVIRONMENT    - mainnet | hoodi
   SNAPSHOT_NAME  - e.g. snapshot-20260225-1
   BASE_HEIGHT    - L2 geth block height (L2 Base Height)
   L1_MSG_HEIGHT  - l1_msg_start_height from indexer API
@@ -31,7 +31,6 @@ CDN_BASE = "https://snapshot.morphl2.io"
 SECTION_MARKERS = {
     "mainnet": "**For mainnet**",
     "hoodi":   "**For hoodi testnet**",
-    "holesky": "**For holesky testnet(legacy)**",
 }
 
 METRICS_FILE = os.environ.get("METRICS_FILE", "/tmp/morph_snapshot_metrics.prom")
