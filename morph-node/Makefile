@@ -82,16 +82,24 @@ set-versions:
 	@echo "Done. Commit with: git commit -m 'chore: bump geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
 
 build-geth: submodule-init
-	@echo "Building geth from source..."
-	cd ../go-ethereum && make geth
-	cp ../go-ethereum/build/bin/geth ./bin/geth
-	@echo "geth binary copied to morph-node/bin/geth"
+	@if [ -f ./bin/geth ]; then \
+		echo "geth binary already exists at ./bin/geth, skipping build."; \
+	else \
+		echo "Building geth from source..."; \
+		cd ../go-ethereum && make geth; \
+		cp ../go-ethereum/build/bin/geth ./bin/geth; \
+		echo "geth binary copied to morph-node/bin/geth"; \
+	fi
 
 build-morphnode: submodule-init
-	@echo "Building morphnode from source..."
-	cd ../morph/node && make morphnode
-	cp ../morph/node/build/bin/morphnode ./bin/morphnode
-	@echo "morphnode binary copied to morph-node/bin/morphnode"
+	@if [ -f ./bin/morphnode ]; then \
+		echo "morphnode binary already exists at ./bin/morphnode, skipping build."; \
+	else \
+		echo "Building morphnode from source..."; \
+		cd ../morph/node && make morphnode; \
+		cp ../morph/node/build/bin/morphnode ./bin/morphnode; \
+		echo "morphnode binary copied to morph-node/bin/morphnode"; \
+	fi
 
 build: build-geth build-morphnode
 	@echo "All binaries built successfully."
@@ -135,6 +143,17 @@ stop-binary:
 	@if [ -f .geth.pid ]; then kill $$(cat .geth.pid) 2>/dev/null; rm -f .geth.pid; echo "geth stopped."; fi
 	@if [ -f .node.pid ]; then kill $$(cat .node.pid) 2>/dev/null; rm -f .node.pid; echo "morphnode stopped."; fi
 
+clean-mainnet-binary:
+	@echo "Cleaning mainnet snapshot data (keeping config)..."
+	rm -rf ../mainnet/geth-data/geth
+	rm -rf ../mainnet/node-data/data/*
+	@echo "Mainnet snapshot data cleaned."
+
+clean-hoodi-binary:
+	@echo "Cleaning hoodi snapshot data (keeping config)..."
+	rm -rf ../hoodi/geth-data/geth
+	rm -rf ../hoodi/node-data/data/*
+	@echo "Hoodi snapshot data cleaned."
 
 # Helper: download, extract, and move snapshot data into MORPH_HOME
 # $(1) = snapshot name, $(2) = download URL base, $(3) = MORPH_HOME
