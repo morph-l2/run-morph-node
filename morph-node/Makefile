@@ -147,12 +147,14 @@ clean-mainnet-binary:
 	@echo "Cleaning mainnet snapshot data (keeping config)..."
 	rm -rf ../mainnet/geth-data/geth
 	rm -rf ../mainnet/node-data/data/*
+	@printf '{\n  "height": "0",\n  "round": 0,\n  "step": 0\n}\n' > ../mainnet/node-data/data/priv_validator_state.json
 	@echo "Mainnet snapshot data cleaned."
 
 clean-hoodi-binary:
 	@echo "Cleaning hoodi snapshot data (keeping config)..."
 	rm -rf ../hoodi/geth-data/geth
 	rm -rf ../hoodi/node-data/data/*
+	@printf '{\n  "height": "0",\n  "round": 0,\n  "step": 0\n}\n' > ../hoodi/node-data/data/priv_validator_state.json
 	@echo "Hoodi snapshot data cleaned."
 
 # Helper: download, extract, and move snapshot data into MORPH_HOME
@@ -181,6 +183,7 @@ define setup-snapshot-data
 		echo "Moving node data to $(3)/node-data/data/..."; \
 		mv $(3)/$(1)/data/* $(3)/node-data/data/ || { echo "Error: failed to move node data."; exit 1; }; \
 		rm -rf $(3)/$(1); \
+		[ -f "$(3)/node-data/data/priv_validator_state.json" ] || printf '{\n  "height": "0",\n  "round": 0,\n  "step": 0\n}\n' > $(3)/node-data/data/priv_validator_state.json; \
 		echo "Snapshot data ready at $(3)."; \
 	fi
 endef
