@@ -17,13 +17,13 @@ generate-jwt-hoodi:
 run-node: generate-jwt
 	@echo "You are about to run a Mainnet MPT node."
 	@echo "To run a ZK (legacy) node instead, use: make run-zk-node"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env up node &
 
 run-hoodi-node: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT node."
 	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env_hoodi up node &
 
 
@@ -43,13 +43,13 @@ rm-node:
 run-validator: generate-jwt
 	@echo "You are about to run a Mainnet MPT validator."
 	@echo "To run a ZK (legacy) validator instead, use: make run-zk-validator"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env up validator &
 
 run-hoodi-validator: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT validator."
 	@echo "To run a ZK (legacy) validator instead, use: make run-hoodi-zk-validator"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	docker-compose --env-file .env_hoodi up validator &
 
 
@@ -76,8 +76,8 @@ submodule-init:
 set-versions:
 	cd ../go-ethereum && git fetch --tags && git checkout morph-v$(GETH_VERSION)
 	cd ../morph       && git fetch --tags && git checkout v$(NODE_VERSION)
-	sed -i 's|go-ethereum:[0-9.]*|go-ethereum:$(GETH_VERSION)|g' docker-compose.yml
-	sed -i 's|morph-l2/node:[0-9.]*|morph-l2/node:$(NODE_VERSION)|g' docker-compose.yml
+	sed -i'' 's|go-ethereum:[0-9.]*|go-ethereum:$(GETH_VERSION)|g' docker-compose.yml
+	sed -i'' 's|morph-l2/node:[0-9.]*|morph-l2/node:$(NODE_VERSION)|g' docker-compose.yml
 	cd .. && git add go-ethereum morph
 	@echo "Done. Commit with: git commit -m 'chore: bump geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
 
@@ -108,23 +108,23 @@ build: build-geth build-morphnode
 run-node-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	sh ./run-binary.sh node .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	sh ./run-binary.sh node .env_hoodi
 
 run-validator-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT validator (binary mode)."
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	sh ./run-binary.sh validator .env
 
 run-hoodi-validator-binary: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT validator (binary mode)."
-	@read -p "Continue? [Y/n] " confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
 	sh ./run-binary.sh validator .env_hoodi
 
 run-zk-node-binary: generate-jwt

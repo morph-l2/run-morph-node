@@ -57,19 +57,18 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-hoodi-zk-snapshot
     ```
 
-- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.
-    - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
+- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. Alternatively, use the `quickstart-*` targets (e.g. `make quickstart-mainnet-node`) which handle snapshot download and placement automatically.
+    - For example, if the snapshot folder is named `mpt-snapshot-20260317-1`, move the directory to the `MORPH_HOME` directories:
         ```
-        mv ./morph-node/snapshot-20250122-1/geth ${MORPH_HOME}/geth-data
-        mv ./morph-node/snapshot-20250122-1/data/* ${MORPH_HOME}/node-data/data
+        mv ./morph-node/mpt-snapshot-20260317-1/geth ${MORPH_HOME}/geth-data
+        mv ./morph-node/mpt-snapshot-20260317-1/data/* ${MORPH_HOME}/node-data/data
         ```
 
     - The folder structure will be like
         ```
         └── ${MORPH_HOME}
             ├── geth-data // data directory for geth
-            │   └── static-nodes.json
-            │   └── geth // directory from snapshot/geth   
+            │   └── geth // directory from snapshot/geth
             └── node-data // data directory for node
                 ├── config
                 │   ├── config.toml
