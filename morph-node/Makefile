@@ -25,10 +25,10 @@ generate-jwt-hoodi:
 
 ## node management
 run-node: generate-jwt
-	docker-compose --env-file .env up node &
+	docker compose --env-file .env up node &
 
 run-holesky-node: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up node &
+	docker compose --env-file .env_holesky up node &
 
 run-hoodi-node: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up node &
@@ -47,10 +47,10 @@ rm-node:
 
 ## validator management
 run-validator: generate-jwt
-	docker-compose --env-file .env up validator &
+	docker compose --env-file .env up validator &
 
 run-holesky-validator: generate-jwt-holesky
-	docker-compose --env-file .env_holesky up validator &
+	docker compose --env-file .env_holesky up validator &
 
 run-hoodi-validator: generate-jwt-hoodi
 	docker-compose --env-file .env_hoodi up validator &
