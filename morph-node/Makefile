@@ -196,22 +196,22 @@ endef
 
 quickstart-hoodi-node: generate-jwt-hoodi
 	@echo "=== Quickstart: Hoodi Node (Docker) ==="
-	$(call setup-snapshot-data,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
 	docker-compose --env-file .env_hoodi up node
 
 quickstart-hoodi-node-binary: generate-jwt-hoodi build
 	@echo "=== Quickstart: Hoodi Node (Binary) ==="
-	$(call setup-snapshot-data,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
 	sh ./run-binary.sh node .env_hoodi
 
 quickstart-mainnet-node: generate-jwt
 	@echo "=== Quickstart: Mainnet Node (Docker) ==="
-	$(call setup-snapshot-data,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
 	docker-compose --env-file .env up node
 
 quickstart-mainnet-node-binary: generate-jwt build
 	@echo "=== Quickstart: Mainnet Node (Binary) ==="
-	$(call setup-snapshot-data,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
 	sh ./run-binary.sh node .env
 
 
@@ -247,10 +247,10 @@ endef
 # Targets
 
 download-and-decompress-mainnet-snapshot:
-	$(call download-and-decompress,$(MAINNET_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
 
 download-and-decompress-hoodi-snapshot:
-	$(call download-and-decompress,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
+	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
 
 # Backward-compatible aliases used in older PR/test plans
 download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-snapshot
