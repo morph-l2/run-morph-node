@@ -58,10 +58,11 @@ Before setting up a Morph node, ensure you have the following installed:
     ```
 
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. Alternatively, use the `quickstart-*` targets (e.g. `make quickstart-mainnet-node`) which handle snapshot download and placement automatically.
-    - For example, if the snapshot folder is named `mpt-snapshot-20260317-1`, move the directory to the `MORPH_HOME` directories:
+    - `make download-and-decompress-*` now extracts snapshots under network directories (`../mainnet` or `../hoodi`).
+    - For example, if the snapshot folder is named `snapshot-20260415-1`, move the directory to the `MORPH_HOME` directories:
         ```
-        mv ./morph-node/mpt-snapshot-20260317-1/geth ${MORPH_HOME}/geth-data
-        mv ./morph-node/mpt-snapshot-20260317-1/data/* ${MORPH_HOME}/node-data/data
+        mv ${MORPH_HOME}/snapshot-20260415-1/geth ${MORPH_HOME}/geth-data
+        mv ${MORPH_HOME}/snapshot-20260415-1/data/* ${MORPH_HOME}/node-data/data
         ```
 
     - The folder structure will be like

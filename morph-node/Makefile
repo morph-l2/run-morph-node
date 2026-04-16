@@ -216,6 +216,7 @@ quickstart-mainnet-node-binary: generate-jwt build
 
 
 # Common function for download and decompress
+# $(1) = snapshot name, $(2) = download URL base, $(3) = target directory
 define download-and-decompress
 	@echo "Checking for required tools (wget, tar)..."; \
 	if ! command -v wget > /dev/null; then \
@@ -227,30 +228,31 @@ define download-and-decompress
 		exit 1; \
 	fi; \
 	echo "Tools are available."; \
+	mkdir -p $(3); \
 	echo "Downloading $(1).tar.gz from $(2)..."; \
-	if wget -O $(1).tar.gz $(2)/$(1).tar.gz; then \
+	if wget -O $(3)/$(1).tar.gz $(2)/$(1).tar.gz; then \
 		echo "$(1).tar.gz downloaded successfully."; \
 	else \
 		echo "Error downloading $(1).tar.gz."; \
 		exit 1; \
 	fi; \
 	echo "Decompressing $(1).tar.gz..."; \
-	if tar -xzvf $(1).tar.gz; then \
+	if tar -xzvf $(3)/$(1).tar.gz -C $(3); then \
 		echo "$(1).tar.gz decompressed successfully."; \
 	else \
 		echo "Error decompressing $(1).tar.gz."; \
 		exit 1; \
 	fi; \
-	rm -rf $(1).tar.gz;
+	rm -rf $(3)/$(1).tar.gz;
 endef
 
 # Targets
 
 download-and-decompress-mainnet-snapshot:
-	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
 
 download-and-decompress-hoodi-snapshot:
-	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
+	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
 
 # Backward-compatible aliases used in older PR/test plans
 download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-snapshot
@@ -258,10 +260,10 @@ download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-sn
 download-and-decompress-hoodi-mpt-snapshot: download-and-decompress-hoodi-snapshot
 
 download-and-decompress-mainnet-zk-snapshot:
-	$(call download-and-decompress,$(MAINNET_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+	$(call download-and-decompress,$(MAINNET_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
 
 download-and-decompress-hoodi-zk-snapshot:
-	$(call download-and-decompress,$(HOODI_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
+	$(call download-and-decompress,$(HOODI_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
 
 
 
