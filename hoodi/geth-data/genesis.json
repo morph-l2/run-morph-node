@@ -20,9 +20,9 @@
     "morph203Time": 0,
     "viridianTime": 1761544800,
     "emeraldTime": 1766988000,
-    "jadeTime": 1774418400,
+    "jadeForkTime": 1774418400,
     "morph": {
-      "useZktrie": true,
+      "useZktrie": false,
       "maxTxPayloadBytesPerBlock": 122880,
       "feeVaultAddress": "0x29107cb79ef8f69fe1587f77e283d47e84c5202f"
     },
