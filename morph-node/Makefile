@@ -7,6 +7,10 @@ include .env_hoodi
 
 JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 
+# Load ZK-specific snapshot variables used by *-zk-snapshot targets
+include .env_zk
+include .env_hoodi_zk
+
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
 
@@ -17,13 +21,13 @@ generate-jwt-hoodi:
 run-node: generate-jwt
 	@echo "You are about to run a Mainnet MPT node."
 	@echo "To run a ZK (legacy) node instead, use: make run-zk-node"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env up node &
 
 run-hoodi-node: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT node."
 	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env_hoodi up node &
 
 
@@ -43,13 +47,13 @@ rm-node:
 run-validator: generate-jwt
 	@echo "You are about to run a Mainnet MPT validator."
 	@echo "To run a ZK (legacy) validator instead, use: make run-zk-validator"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env up validator &
 
 run-hoodi-validator: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT validator."
 	@echo "To run a ZK (legacy) validator instead, use: make run-hoodi-zk-validator"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env_hoodi up validator &
 
 
@@ -108,23 +112,23 @@ build: build-geth build-morphnode
 run-node-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	sh ./run-binary.sh node .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	sh ./run-binary.sh node .env_hoodi
 
 run-validator-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT validator (binary mode)."
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	sh ./run-binary.sh validator .env
 
 run-hoodi-validator-binary: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT validator (binary mode)."
-	@printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi
+	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	sh ./run-binary.sh validator .env_hoodi
 
 run-zk-node-binary: generate-jwt
@@ -248,11 +252,16 @@ download-and-decompress-mainnet-snapshot:
 download-and-decompress-hoodi-snapshot:
 	$(call download-and-decompress,$(HOODI_MPT_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
 
+# Backward-compatible aliases used in older PR/test plans
+download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-snapshot
+
+download-and-decompress-hoodi-mpt-snapshot: download-and-decompress-hoodi-snapshot
+
 download-and-decompress-mainnet-zk-snapshot:
-	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
+	$(call download-and-decompress,$(MAINNET_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet)
 
 download-and-decompress-hoodi-zk-snapshot:
-	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
+	$(call download-and-decompress,$(HOODI_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi)
 
 
 

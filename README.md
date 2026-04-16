@@ -97,7 +97,7 @@ Before setting up a Morph node, ensure you have the following installed:
 
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the `DERIVATION_START_HEIGHT` and `L1_MSG_START_HEIGHT` variables defined in the `.env`(or `.env_hoodi` if testnet)match the selected snapshot.
+The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
 
 **For mainnet**:
 
