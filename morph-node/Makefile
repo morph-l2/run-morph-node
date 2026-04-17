@@ -90,8 +90,9 @@ build-geth: submodule-init
 		echo "geth binary already exists at ./bin/geth, skipping build."; \
 	else \
 		echo "Building geth from source..."; \
-		cd ../go-ethereum && make geth; \
-		cp ../go-ethereum/build/bin/geth ./bin/geth; \
+		(cd ../go-ethereum && make geth) || { echo "Error: geth build failed."; exit 1; }; \
+		mkdir -p ./bin; \
+		cp ../go-ethereum/build/bin/geth ./bin/geth || { echo "Error: failed to copy geth binary to morph-node/bin/geth."; exit 1; }; \
 		echo "geth binary copied to morph-node/bin/geth"; \
 	fi
 
@@ -100,8 +101,9 @@ build-morphnode: submodule-init
 		echo "morphnode binary already exists at ./bin/morphnode, skipping build."; \
 	else \
 		echo "Building morphnode from source..."; \
-		cd ../morph/node && make morphnode; \
-		cp ../morph/node/build/bin/morphnode ./bin/morphnode; \
+		(cd ../morph/node && make morphnode) || { echo "Error: morphnode build failed."; exit 1; }; \
+		mkdir -p ./bin; \
+		cp ../morph/node/build/bin/morphnode ./bin/morphnode || { echo "Error: failed to copy morphnode binary to morph-node/bin/morphnode."; exit 1; }; \
 		echo "morphnode binary copied to morph-node/bin/morphnode"; \
 	fi
 
