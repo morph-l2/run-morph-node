@@ -47,29 +47,29 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-hoodi-snapshot
     ```
 
-- For MPT node (mainnet or Hoodi testnet), download the MPT-specific snapshot:
+- For ZK node (legacy), download the ZK-specific snapshot:
 
     ```bash
-    make download-and-decompress-mainnet-mpt-snapshot
+    make download-and-decompress-mainnet-zk-snapshot
     ```
     or
     ```bash
-    make download-and-decompress-hoodi-mpt-snapshot
+    make download-and-decompress-hoodi-zk-snapshot
     ```
 
-- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories.
-    - For example, if the snapshot folder is named `snapshot-20250122-1`, move the directory `snapshot-20250122-1/geth` to the `MORPH_HOME/geth-data` directory and the contents from `snapshot-20250122-1/data` to the `${NODE_DATA_DIR}/data directory`.
+- After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. Alternatively, use the `quickstart-*` targets (e.g. `make quickstart-mainnet-node`) which handle snapshot download and placement automatically.
+    - `make download-and-decompress-*` now extracts snapshots under network directories (`../mainnet` or `../hoodi`).
+    - For example, if the snapshot folder is named `snapshot-20260415-1`, move the directory to the `MORPH_HOME` directories:
         ```
-        mv ./morph-node/snapshot-20250122-1/geth ${MORPH_HOME}/geth-data
-        mv ./morph-node/snapshot-20250122-1/data/* ${MORPH_HOME}/node-data/data
+        mv ${MORPH_HOME}/snapshot-20260415-1/geth ${MORPH_HOME}/geth-data
+        mv ${MORPH_HOME}/snapshot-20260415-1/data/* ${MORPH_HOME}/node-data/data
         ```
 
     - The folder structure will be like
         ```
         └── ${MORPH_HOME}
             ├── geth-data // data directory for geth
-            │   └── static-nodes.json
-            │   └── geth // directory from snapshot/geth   
+            │   └── geth // directory from snapshot/geth
             └── node-data // data directory for node
                 ├── config
                 │   ├── config.toml
@@ -86,35 +86,30 @@ Before setting up a Morph node, ensure you have the following installed:
     make run-node
     ```
 
-  For testnet, run
+  For Hoodi testnet, run
 
     ```bash
     make run-hoodi-node
     ```
 
-  For MPT node, run
-
-    ```bash
-    make run-mainnet-mpt-node
-    ```
-    or
-    ```bash
-    make run-hoodi-mpt-node
-    ```
+- Both commands default to MPT mode. For ZK legacy nodes, use `make run-zk-node` or `make run-hoodi-zk-node`.
 
 - This command will set up and run the node based on the configurations specified in your .env file.
 
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure the `DERIVATION_START_HEIGHT` and `L1_MSG_START_HEIGHT` variables defined in the `.env`(or `.env_hoodi` if testnet)match the selected snapshot.
+The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
 
 **For mainnet**:
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-20260415-1](https://snapshot.morphl2.io/mainnet/snapshot-20260415-1.tar.gz) | 24883902 | 24883052 | 22181317 |
+<<<<<<< switch-default-to-mpt
+=======
 | [snapshot-archive-20260408-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260408-1.tar.gz) | 24833909 | 24833674 | 22016521 |
 | [mpt-snapshot-20260317-1](https://snapshot.morphl2.io/mainnet/mpt-snapshot-20260317-1.tar.gz) | 24676384 | 24674343 | 21500591 |
+>>>>>>> main
 | [mpt-snapshot-20260312-1](https://snapshot.morphl2.io/mainnet/mpt-snapshot-20260312-1.tar.gz) | 24639293                | 24637932            | 21382556      |
 
 **For hoodi testnet**:
@@ -141,13 +136,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260304-1](https://snapshot.morphl2.io/hoodi/snapshot-20260304-1.tar.gz) | 2349111                 | 2346416             | 3713448        |
 | [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
 
-**For holesky testnet(legacy)**:
-
-|    Snapshot Name    |Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------------|:------------------------|:--------------------|:--------------------|
-|[snapshot-20250903-1](https://snapshot.morphl2.io/holesky/snapshot-20250903-1.tar.gz)|4445350|4445989|19741862|
-|[snapshot-20250818-1](https://snapshot.morphl2.io/holesky/snapshot-20250818-1.tar.gz)|4360545|4359976|19432113|
-|[snapshot-20250428-1](https://snapshot.morphl2.io/holesky/snapshot-20250428-1.tar.gz)|3748991|3748974|17193670|
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
