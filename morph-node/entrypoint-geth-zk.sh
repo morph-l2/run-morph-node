@@ -14,7 +14,6 @@ MORPH_FLAG=${MORPH_FLAG:-"morph"}
 
 exec "${GETH_BIN}" \
   "--${MORPH_FLAG}" \
-  --morph-mpt \
   "--datadir=${GETH_DATADIR}" \
   --verbosity=3 \
   --http \
