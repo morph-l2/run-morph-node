@@ -105,21 +105,22 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-archive-20260501-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260501-1.tar.gz) | 25003345 | 24999423 | 22581152 |
+| [snapshot-20260501-1](https://snapshot.morphl2.io/mainnet/snapshot-20260501-1.tar.gz) | 25003345 | 24999423 | 22581152 |
 | [snapshot-archive-20260420-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260420-1.tar.gz) | 24918938 | 24912787 | 22299529 |
 | [snapshot-20260415-1](https://snapshot.morphl2.io/mainnet/snapshot-20260415-1.tar.gz) | 24883902 | 24883052 | 22181317 |
 | [snapshot-archive-20260408-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260408-1.tar.gz) | 24833909 | 24833674 | 22016521 |
 | [mpt-snapshot-20260317-1](https://snapshot.morphl2.io/mainnet/mpt-snapshot-20260317-1.tar.gz) | 24676384 | 24674343 | 21500591 |
-| [mpt-snapshot-20260312-1](https://snapshot.morphl2.io/mainnet/mpt-snapshot-20260312-1.tar.gz) | 24639293                | 24637932            | 21382556      |
 
 **For hoodi testnet**:
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-archive-20260430-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260430-1.tar.gz) | 2724220 | 2721599 | 5092257 |
+| [snapshot-20260430-1](https://snapshot.morphl2.io/hoodi/snapshot-20260430-1.tar.gz) | 2724220 | 2721599 | 5092257 |
 | [snapshot-20260415-1](https://snapshot.morphl2.io/hoodi/snapshot-20260415-1.tar.gz) | 2623362 | 2615708 | 4700645 |
 | [snapshot-archive-20260415-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260415-1.tar.gz) | 2623362 | 2615708 | 4700572 |
 | [mpt-snapshot-20260402-1](https://snapshot.morphl2.io/hoodi/mpt-snapshot-20260402-1.tar.gz) | 2534958 | 2528506 | 4391571 |
 | [mpt-snapshot-archive-20260401-1](https://snapshot.morphl2.io/hoodi/mpt-snapshot-archive-20260401-1.tar.gz) | 2528394 | 2517091 | 4368142 |
-| [mpt-snapshot-archive-20260316-1](https://snapshot.morphl2.io/hoodi/mpt-snapshot-archive-20260316-1.tar.gz) | 2427831 | 2408746 | 4001210 |
 
 **For mainnet ZK node(legacy)**:
 
