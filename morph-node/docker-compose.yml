@@ -1,7 +1,7 @@
 services:
   geth:
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:2.2.1
+    image: ghcr.io/morph-l2/go-ethereum:2.2.3
     restart: unless-stopped
     ports:
       - "8545:8545"
@@ -24,7 +24,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.5.4
+    image: ghcr.io/morph-l2/node:0.5.7
     restart: unless-stopped
     ports:
       - "26656"
@@ -54,7 +54,7 @@ services:
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.5.4
+    image: ghcr.io/morph-l2/node:0.5.7
     ports:
       - "26660"
     environment:
