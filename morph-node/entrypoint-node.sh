@@ -29,9 +29,10 @@ fi
 export MORPH_NODE_SYNC_START_HEIGHT=${MORPH_NODE_SYNC_START_HEIGHT:-${L1_MSG_START_HEIGHT:-}}
 export MORPH_NODE_L1_CHAIN_ID=${MORPH_NODE_L1_CHAIN_ID:-${L1_CHAIN_ID:-}}
 
-# Batch verification mode (--derivation.verify-mode). pathA fetches L1 beacon blob
-# and decodes it; pathB rebuilds the blob locally from L2 and compares.
-# Export only when set; empty/unset falls back to the binary default (pathA).
+# Batch verification mode (--derivation.verify-mode). "local" (default) rebuilds
+# the blob from local L2 and compares versioned hashes vs L1; "layer1" pulls the
+# L1 beacon blob and derives via the engine (former validator behavior).
+# Export only when set; empty/unset falls back to the binary default (local).
 DERIVATION_VERIFY_MODE_VALUE=${MORPH_NODE_DERIVATION_VERIFY_MODE:-${DERIVATION_VERIFY_MODE:-}}
 if [ -n "${DERIVATION_VERIFY_MODE_VALUE}" ]; then
   export MORPH_NODE_DERIVATION_VERIFY_MODE="${DERIVATION_VERIFY_MODE_VALUE}"

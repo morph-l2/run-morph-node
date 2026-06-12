@@ -100,12 +100,12 @@ Before setting up a Morph node, ensure you have the following installed:
 
 There is a single node startup (one `node` service). Batch verification behavior is
 controlled by the `DERIVATION_VERIFY_MODE` operator variable in `.env` / `.env_hoodi`
-(maps to the `--derivation.verify-mode` flag):
+(maps to the `--derivation.verify-mode` flag; behavior from morph PR #966):
 
-- `pathA` (default): fetch the L1 beacon blob and decode it.
-- `pathB`: rebuild the blob locally from L2 and compare against L1.
+- `local` (default): rebuild the blob from local L2 blocks and compare versioned hashes against L1 (no beacon fetch on the happy path).
+- `layer1`: pull the L1 beacon blob, decode it, and derive via the engine — equivalent to the **former validator node** that derives from L1.
 
-Leave it empty to fall back to the binary default (`pathA`).
+Leave it empty to fall back to the binary default (`local`).
 
 > **Do not** set `L1_SEQUENCER_CONTRACT` or `CONSENSUS_SWITCH_HEIGHT` in the `.env`
 > files. These are hardcoded per-network defaults in the binary, not operator

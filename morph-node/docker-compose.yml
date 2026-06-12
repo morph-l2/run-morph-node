@@ -43,8 +43,9 @@ services:
       - MORPH_NODE_SYNC_START_HEIGHT=${L1_MSG_START_HEIGHT}
       - MORPH_NODE_DERIVATION_START_HEIGHT=${DERIVATION_START_HEIGHT}
       - MORPH_NODE_DERIVATION_BASE_HEIGHT=${L2_BASE_HEIGHT}
-      # Batch verification mode: pathA (default, fetch L1 beacon blob and decode)
-      # or pathB (rebuild blob locally from L2 and compare). Empty => binary default (pathA).
+      # Batch verification mode: "local" (default, rebuild blob from L2 + compare
+      # vs L1) or "layer1" (pull L1 beacon blob + derive, former validator behavior).
+      # Empty => binary default (local).
       - MORPH_NODE_DERIVATION_VERIFY_MODE=${DERIVATION_VERIFY_MODE:-}
       - NODE_EXTRA_FLAGS=${NODE_EXTRA_FLAGS:-}
     volumes:
