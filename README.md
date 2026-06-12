@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Dockerized Deployment**: Simplifies the process of setting up Morph validator nodes using Docker containers.
+- **Dockerized Deployment**: Simplifies the process of setting up Morph nodes using Docker containers.
 - **Network Support**: Provides configurations for both Mainnet and Hoodi testnet environments.
 - **Snapshot Synchronization**: Supports synchronizing node data from snapshots to expedite the setup process.
 
@@ -96,9 +96,25 @@ Before setting up a Morph node, ensure you have the following installed:
 
 - This command will set up and run the node based on the configurations specified in your .env file.
 
+### Node startup and batch verification mode
+
+There is a single node startup (one `node` service). Batch verification behavior is
+controlled by the `DERIVATION_VERIFY_MODE` operator variable in `.env` / `.env_hoodi`
+(maps to the `--derivation.verify-mode` flag):
+
+- `pathA` (default): fetch the L1 beacon blob and decode it.
+- `pathB`: rebuild the blob locally from L2 and compare against L1.
+
+Leave it empty to fall back to the binary default (`pathA`).
+
+> **Do not** set `L1_SEQUENCER_CONTRACT` or `CONSENSUS_SWITCH_HEIGHT` in the `.env`
+> files. These are hardcoded per-network defaults in the binary, not operator
+> configuration. Setting them (especially `CONSENSUS_SWITCH_HEIGHT=-1`) overrides the
+> hardcoded defaults and can mistakenly disable the consensus upgrade.
+
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
+The table below provides the node snapshot data and corresponding download URLs. When starting the node, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
 
 **For mainnet**:
 
