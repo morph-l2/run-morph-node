@@ -105,15 +105,13 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-archive-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
+| [snapshot-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
+| [snapshot-archive-reth-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
 | [snapshot-archive-reth-20260611-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260611-1.tar.gz) | 25292505 | 25289910 | 23691680 |
 | [snapshot-archive-20260601-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260601-1.tar.gz) | 25225796 | 25222739 | 23431175 |
 | [snapshot-20260601-1](https://snapshot.morphl2.io/mainnet/snapshot-20260601-1.tar.gz) | 25225796 | 25222739 | 23431175 |
 | [snapshot-archive-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260509-1.tar.gz) | 25054624 | 25049597 | 22750074 |
 | [snapshot-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-20260509-1.tar.gz) | 25054624 | 25049597 | 22750147 |
-| [snapshot-archive-20260501-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260501-1.tar.gz) | 25003345 | 24999423 | 22581152 |
-| [snapshot-20260501-1](https://snapshot.morphl2.io/mainnet/snapshot-20260501-1.tar.gz) | 25003345 | 24999423 | 22581152 |
-| [snapshot-archive-20260420-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260420-1.tar.gz) | 24918938 | 24912787 | 22299529 |
-| [snapshot-20260415-1](https://snapshot.morphl2.io/mainnet/snapshot-20260415-1.tar.gz) | 24883902 | 24883052 | 22181317 |
 
 **For hoodi testnet**:
 
