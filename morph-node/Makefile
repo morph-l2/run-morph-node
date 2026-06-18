@@ -43,32 +43,6 @@ stop-node:
 rm-node:
 	docker rm morph-node morph-geth
 
-## validator management
-run-validator: generate-jwt
-	@echo "You are about to run a Mainnet MPT validator."
-	@echo "To run a ZK (legacy) validator instead, use: make run-zk-validator"
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	docker-compose --env-file .env up validator &
-
-run-hoodi-validator: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT validator."
-	@echo "To run a ZK (legacy) validator instead, use: make run-hoodi-zk-validator"
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	docker-compose --env-file .env_hoodi up validator &
-
-
-run-zk-validator: generate-jwt
-	docker-compose --env-file .env --env-file .env_zk up validator &
-
-run-hoodi-zk-validator: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up validator &
-
-stop-validator:
-	docker stop validator_node morph-geth
-
-rm-validator:
-	docker rm validator_node morph-geth
-
 ## build from source (requires Go)
 submodule-init:
 	@echo "Initializing git submodules..."
@@ -115,35 +89,19 @@ run-node-binary: generate-jwt
 	@echo "You are about to run a Mainnet MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh node .env
+	sh ./run-binary.sh .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi MPT node (binary mode)."
 	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh node .env_hoodi
-
-run-validator-binary: generate-jwt
-	@echo "You are about to run a Mainnet MPT validator (binary mode)."
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh validator .env
-
-run-hoodi-validator-binary: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT validator (binary mode)."
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh validator .env_hoodi
+	sh ./run-binary.sh .env_hoodi
 
 run-zk-node-binary: generate-jwt
-	sh ./run-binary.sh node .env .env_zk
+	sh ./run-binary.sh .env .env_zk
 
 run-hoodi-zk-node-binary: generate-jwt-hoodi
-	sh ./run-binary.sh node .env_hoodi .env_hoodi_zk
-
-run-zk-validator-binary: generate-jwt
-	sh ./run-binary.sh validator .env .env_zk
-
-run-hoodi-zk-validator-binary: generate-jwt-hoodi
-	sh ./run-binary.sh validator .env_hoodi .env_hoodi_zk
+	sh ./run-binary.sh .env_hoodi .env_hoodi_zk
 
 stop-binary:
 	@if [ -f .geth.pid ]; then kill $$(cat .geth.pid) 2>/dev/null; rm -f .geth.pid; echo "geth stopped."; fi
@@ -204,7 +162,7 @@ quickstart-hoodi-node: generate-jwt-hoodi
 quickstart-hoodi-node-binary: generate-jwt-hoodi build
 	@echo "=== Quickstart: Hoodi Node (Binary) ==="
 	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
-	sh ./run-binary.sh node .env_hoodi
+	sh ./run-binary.sh .env_hoodi
 
 quickstart-mainnet-node: generate-jwt
 	@echo "=== Quickstart: Mainnet Node (Docker) ==="
@@ -214,7 +172,7 @@ quickstart-mainnet-node: generate-jwt
 quickstart-mainnet-node-binary: generate-jwt build
 	@echo "=== Quickstart: Mainnet Node (Binary) ==="
 	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
-	sh ./run-binary.sh node .env
+	sh ./run-binary.sh .env
 
 
 # Common function for download and decompress

@@ -1,13 +1,11 @@
 #!/bin/sh
 
-# Usage: run-binary.sh <mode> <env-file> [override-env-file]
-#   mode: node | validator
+# Usage: run-binary.sh <env-file> [override-env-file]
 #   env-file: .env | .env_hoodi
 #   override-env-file: optional, e.g. .env_zk for ZK legacy mode
 
-MODE=${1:-node}
-ENV_FILE=${2:-.env}
-OVERRIDE_ENV_FILE=${3:-}
+ENV_FILE=${1:-.env}
+OVERRIDE_ENV_FILE=${2:-}
 
 # Source environment
 set -a
@@ -88,13 +86,8 @@ if ! nc -z localhost 8551 2>/dev/null; then
     exit 1
 fi
 
-# Set validator mode
-if [ "${MODE}" = "validator" ]; then
-    NODE_EXTRA_FLAGS="--validator ${NODE_EXTRA_FLAGS:-}"
-fi
-
 # Start morphnode
-echo "Starting morphnode (${MODE} mode)..."
+echo "Starting morphnode..."
 NODE_BINARY=${NODE_BINARY} \
 NODE_HOME=${MORPH_HOME}/node-data \
 JWT_SECRET_PATH=${JWT_SECRET_FILE} \
