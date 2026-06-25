@@ -100,7 +100,7 @@ Before setting up a Morph node, ensure you have the following installed:
 
 The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
 
-**For mainnet**:
+**For mainnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
@@ -113,7 +113,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-archive-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260509-1.tar.gz) | 25054624 | 25049597 | 22750074 |
 | [snapshot-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-20260509-1.tar.gz) | 25054624 | 25049597 | 22750147 |
 
-**For hoodi testnet**:
+**For hoodi testnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
