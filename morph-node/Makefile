@@ -112,9 +112,7 @@ build: build-geth build-morphnode
 
 ## binary mode
 run-node-binary: generate-jwt
-	@echo "You are about to run a Mainnet MPT node (binary mode)."
-	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
+	@echo "Running a Mainnet MPT node (binary mode)."
 	sh ./run-binary.sh node .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
