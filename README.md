@@ -105,27 +105,26 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-20260701-1](https://snapshot.morphl2.io/mainnet/snapshot-20260701-1.tar.gz) | 25440822 | 25439950 | 24216219 |
+| [snapshot-archive-reth-20260701-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260701-1.tar.gz) | 25440822 | 25439950 | 24216219 |
 | [snapshot-archive-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
 | [snapshot-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
 | [snapshot-archive-reth-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
 | [snapshot-archive-reth-20260611-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260611-1.tar.gz) | 25292505 | 25289910 | 23691680 |
 | [snapshot-archive-20260601-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260601-1.tar.gz) | 25225796 | 25222739 | 23431175 |
 | [snapshot-20260601-1](https://snapshot.morphl2.io/mainnet/snapshot-20260601-1.tar.gz) | 25225796 | 25222739 | 23431175 |
-| [snapshot-archive-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260509-1.tar.gz) | 25054624 | 25049597 | 22750074 |
-| [snapshot-20260509-1](https://snapshot.morphl2.io/mainnet/snapshot-20260509-1.tar.gz) | 25054624 | 25049597 | 22750147 |
 
 **For hoodi testnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-archive-20260630-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260630-1.tar.gz) | 3122685 | 3106743 | 6543334 |
+| [snapshot-20260630-1](https://snapshot.morphl2.io/hoodi/snapshot-20260630-1.tar.gz) | 3122685 | 3106743 | 6543334 |
+| [snapshot-archive-reth-20260630-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260630-1.tar.gz) | 3122685 | 3106743 | 6543334 |
 | [snapshot-archive-20260614-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260614-1.tar.gz) | 3017861 | 2946604 | 6156574 |
 | [snapshot-20260614-1](https://snapshot.morphl2.io/hoodi/snapshot-20260614-1.tar.gz) | 3017861 | 2946604 | 6156574 |
 | [snapshot-archive-reth-20260614-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260614-1.tar.gz) | 3017861 | 2946604 | 6156574 |
 | [snapshot-archive-reth-20260601-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260601-1.tar.gz) | 2930601 | 2916614 | 5828361 |
 | [snapshot-archive-20260531-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260531-1.tar.gz) | 2927766 | 2916614 | 5817801 |
-| [snapshot-20260531-1](https://snapshot.morphl2.io/hoodi/snapshot-20260531-1.tar.gz) | 2927766 | 2916614 | 5817801 |
-| [snapshot-20260509-1](https://snapshot.morphl2.io/hoodi/snapshot-20260509-1.tar.gz) | 2777180 | 2766375 | 5280200 |
-| [snapshot-archive-20260509-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260509-1.tar.gz) | 2777180 | 2766375 | 5280155 |
 
 **For mainnet ZK node(legacy)**:
 
