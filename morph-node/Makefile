@@ -116,9 +116,7 @@ run-node-binary: generate-jwt
 	sh ./run-binary.sh node .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT node (binary mode)."
-	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
-	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
+	@echo "Running a Hoodi MPT node (binary mode)."
 	sh ./run-binary.sh node .env_hoodi
 
 run-validator-binary: generate-jwt
