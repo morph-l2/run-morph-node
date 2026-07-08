@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Dockerized Deployment**: Simplifies the process of setting up Morph validator nodes using Docker containers.
+- **Dockerized Deployment**: Simplifies the process of setting up Morph nodes using Docker containers.
 - **Network Support**: Provides configurations for both Mainnet and Hoodi testnet environments.
 - **Snapshot Synchronization**: Supports synchronizing node data from snapshots to expedite the setup process.
 
@@ -47,16 +47,6 @@ Before setting up a Morph node, ensure you have the following installed:
     make download-and-decompress-hoodi-snapshot
     ```
 
-- For ZK node (legacy), download the ZK-specific snapshot:
-
-    ```bash
-    make download-and-decompress-mainnet-zk-snapshot
-    ```
-    or
-    ```bash
-    make download-and-decompress-hoodi-zk-snapshot
-    ```
-
 - After downloading the snapshot, you need to manually place the decompressed data files in the appropriate node data directories. Alternatively, use the `quickstart-*` targets (e.g. `make quickstart-mainnet-node`) which handle snapshot download and placement automatically.
     - `make download-and-decompress-*` now extracts snapshots under network directories (`../mainnet` or `../hoodi`).
     - For example, if the snapshot folder is named `snapshot-20260415-1`, move the directory to the `MORPH_HOME` directories:
@@ -92,13 +82,32 @@ Before setting up a Morph node, ensure you have the following installed:
     make run-hoodi-node
     ```
 
-- Both commands default to MPT mode. For ZK legacy nodes, use `make run-zk-node` or `make run-hoodi-zk-node`.
-
 - This command will set up and run the node based on the configurations specified in your .env file.
+
+### Running as a validator (batch verification mode)
+
+There is no separate validator service anymore — every node self-verifies L1 batches. The
+mode is controlled by `DERIVATION_VERIFY_MODE` (`--derivation.verify-mode`) in the env file:
+
+- `local` (default): rebuild the blob from local L2 blocks and compare versioned hashes
+  against L1. No beacon fetch on the happy path.
+- `layer1`: pull the L1 beacon blob, decode it, and derive via the engine — equivalent to
+  the former validator node. Requires a working `L1_BEACON_CHAIN_RPC`.
+
+Convenience targets run the same node in `layer1` mode:
+
+```bash
+make run-validator          # mainnet, Docker
+make run-hoodi-validator    # hoodi, Docker
+make run-validator-binary   # mainnet, binary
+```
+
+> `L1_SEQUENCER_CONTRACT` and `CONSENSUS_SWITCH_HEIGHT` are hardcoded per-network defaults
+> in the binary and must not be set as operator config.
 
 ## Snapshot Information
 
-The table below provides the node snapshot data and corresponding download URLs. When starting the validator, ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` match the selected snapshot: use `.env`/`.env_hoodi` for MPT, and `.env_zk`/`.env_hoodi_zk` for ZK legacy.
+The table below provides the node snapshot data and corresponding download URLs. Ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` in `.env`/`.env_hoodi` match the selected snapshot.
 
 **For mainnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
@@ -126,23 +135,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-archive-reth-20260614-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260614-1.tar.gz) | 3017861 | 2946604 | 6156574 |
 | [snapshot-archive-reth-20260601-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260601-1.tar.gz) | 2930601 | 2916614 | 5828361 |
 | [snapshot-archive-20260531-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260531-1.tar.gz) | 2927766 | 2916614 | 5817801 |
-
-**For mainnet ZK node(legacy)**:
-
-| Snapshot Name | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------|:------------------------|:--------------------|:---------------|
-| [snapshot-20260316-1](https://snapshot.morphl2.io/mainnet/snapshot-20260316-1.tar.gz) | 24668486                | 24667943            | 21474974      |
-| [snapshot-20260304-1](https://snapshot.morphl2.io/mainnet/snapshot-20260304-1.tar.gz) | 24582164                | 24582123            | 21195806      |
-| [snapshot-20260210-1](https://snapshot.morphl2.io/mainnet/snapshot-20260210-1.tar.gz) | 24424695                | 24424698            | 20674922      |
-
-**For hoodi testnet ZK node(legacy)**:
-
-| Snapshot Name | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------|:------------------------|:--------------------|:---------------|
-| [snapshot-20260316-1](https://snapshot.morphl2.io/hoodi/snapshot-20260316-1.tar.gz) | 2427831                 | 2408746             | 4001145        |
-| [snapshot-20260304-1](https://snapshot.morphl2.io/hoodi/snapshot-20260304-1.tar.gz) | 2349111                 | 2346416             | 3713448        |
-| [snapshot-20260210-1](https://snapshot.morphl2.io/hoodi/snapshot-20260210-1.tar.gz) | 2205636                 | 2201288             | 3187147        |
-
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:

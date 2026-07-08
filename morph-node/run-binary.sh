@@ -1,13 +1,15 @@
 #!/bin/sh
 
-# Usage: run-binary.sh <mode> <env-file> [override-env-file]
-#   mode: node | validator
+# Usage: run-binary.sh <env-file> [override-env-file]
 #   env-file: .env | .env_hoodi
-#   override-env-file: optional, e.g. .env_zk for ZK legacy mode
+#   override-env-file: optional extra env file layered on top
+#
+# There is no node/validator mode arg anymore: every node self-verifies. For the
+# former validator behavior, set MORPH_NODE_DERIVATION_VERIFY_MODE=layer1 in the
+# environment (see `make run-validator-binary`).
 
-MODE=${1:-node}
-ENV_FILE=${2:-.env}
-OVERRIDE_ENV_FILE=${3:-}
+ENV_FILE=${1:-.env}
+OVERRIDE_ENV_FILE=${2:-}
 
 # Source environment
 set -a
@@ -50,7 +52,7 @@ trap cleanup INT TERM
 
 # Validate entrypoint file
 case "${GETH_ENTRYPOINT_FILE}" in
-    ./entrypoint-geth.sh|./entrypoint-geth-zk.sh) ;;
+    ./entrypoint-geth.sh) ;;
     *)
         echo "Error: invalid GETH_ENTRYPOINT_FILE: ${GETH_ENTRYPOINT_FILE}"
         exit 1
@@ -88,13 +90,8 @@ if ! nc -z localhost 8551 2>/dev/null; then
     exit 1
 fi
 
-# Set validator mode
-if [ "${MODE}" = "validator" ]; then
-    NODE_EXTRA_FLAGS="--validator ${NODE_EXTRA_FLAGS:-}"
-fi
-
 # Start morphnode
-echo "Starting morphnode (${MODE} mode)..."
+echo "Starting morphnode..."
 NODE_BINARY=${NODE_BINARY} \
 NODE_HOME=${MORPH_HOME}/node-data \
 JWT_SECRET_PATH=${JWT_SECRET_FILE} \
