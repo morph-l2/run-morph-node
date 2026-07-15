@@ -22,16 +22,16 @@ services:
   # Single self-verifying node. There is no separate validator service anymore:
   # every node verifies batches via --derivation.verify-mode. Set
   # DERIVATION_VERIFY_MODE=layer1 (in .env/.env_hoodi) for the former validator
-  # behavior (pull L1 beacon blob + derive); default "local" needs no beacon.
+  # behavior (pull L1 beacon blob + derive). L1_BEACON_CHAIN_RPC is required in
+  # both modes (the node exits at startup without it); "local" simply doesn't
+  # fetch the blob on the happy path.
   node:
     container_name: morph-node
     depends_on:
       geth:
         condition: service_started
-    # Provisional: bumped 0.5.7 -> 0.5.8. This must be a build of morph main
-    # (single-sequencer + --derivation.verify-mode); 0.5.7 and earlier predate
-    # verify-mode. Confirm/replace with the real published tag before merge.
-    image: ghcr.io/morph-l2/node:0.5.8
+    # morph main build with single-sequencer + --derivation.verify-mode support.
+    image: ghcr.io/morph-l2/node:0.6.0
     restart: unless-stopped
     ports:
       - "26656"
@@ -43,7 +43,8 @@ services:
       - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
       - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
       - MORPH_NODE_L1_ETH_RPC=${L1_ETH_RPC}
-      # Beacon RPC is only used on the layer1 verify path; harmless when unset for local.
+      # Required in both verify modes: the node exits at startup if this is empty.
+      # Only fetched at runtime on the layer1 path (local skips it on the happy path).
       - MORPH_NODE_L1_ETH_BEACON_RPC=${L1_BEACON_CHAIN_RPC}
       - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
       - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACT}

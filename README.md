@@ -92,15 +92,20 @@ mode is controlled by `DERIVATION_VERIFY_MODE` (`--derivation.verify-mode`) in t
 - `local` (default): rebuild the blob from local L2 blocks and compare versioned hashes
   against L1. No beacon fetch on the happy path.
 - `layer1`: pull the L1 beacon blob, decode it, and derive via the engine — equivalent to
-  the former validator node. Requires a working `L1_BEACON_CHAIN_RPC`.
+  the former validator node.
 
-Convenience targets run the same node in `layer1` mode:
+`L1_BEACON_CHAIN_RPC` is required in **both** modes — the node exits at startup without it.
+`local` just doesn't fetch the blob on the happy path; `layer1` fetches it every batch.
 
-```bash
-make run-validator          # mainnet, Docker
-make run-hoodi-validator    # hoodi, Docker
-make run-validator-binary   # mainnet, binary
-```
+`layer1` is what the former validator node did. Two ways to enable it:
+
+- **Validator commands** (kept for backward compatibility): `make run-validator` /
+  `make run-hoodi-validator` (or the `-binary` variants) run the single node in `layer1`
+  mode. Stop/remove with `make stop-validator` / `make rm-validator` (aliases of
+  `make stop-node` / `make rm-node`).
+- **Env var:** set `DERIVATION_VERIFY_MODE=layer1` in `.env` / `.env_hoodi`, then `make run-node`.
+
+There is no separate validator container anymore — both paths run the same `morph-node`.
 
 > `L1_SEQUENCER_CONTRACT` and `CONSENSUS_SWITCH_HEIGHT` are hardcoded per-network defaults
 > in the binary and must not be set as operator config.

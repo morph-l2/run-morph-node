@@ -5,8 +5,8 @@
 #   override-env-file: optional extra env file layered on top
 #
 # There is no node/validator mode arg anymore: every node self-verifies. For the
-# former validator behavior, set MORPH_NODE_DERIVATION_VERIFY_MODE=layer1 in the
-# environment (see `make run-validator-binary`).
+# former validator behavior, set DERIVATION_VERIFY_MODE=layer1 in the env file
+# (or use `make run-validator-binary`, which sets it for you).
 
 ENV_FILE=${1:-.env}
 OVERRIDE_ENV_FILE=${2:-}

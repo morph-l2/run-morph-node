@@ -30,11 +30,11 @@ stop-node:
 rm-node:
 	docker rm morph-node morph-geth
 
-## validator mode = the SAME single node run with layer1 batch verification
-## (--derivation.verify-mode=layer1: pull the L1 beacon blob and derive via the
-## engine). It is NOT a separate service/container, so stop/rm with the node
-## targets above. Requires a working L1_BEACON_CHAIN_RPC in the env file.
-## The shell-exported DERIVATION_VERIFY_MODE overrides the empty value in .env.
+## Validator commands, kept for backward compatibility. A "validator" is now just
+## the single node run in layer1 batch-verification mode (--derivation.verify-mode=layer1:
+## pull the L1 beacon blob and derive via the engine). There is no separate validator
+## container anymore, so stop/rm operate on the same morph-node container.
+## Requires a working L1_BEACON_CHAIN_RPC in the env file.
 run-validator: generate-jwt
 	@echo "You are about to run a Mainnet node in validator mode (--derivation.verify-mode=layer1)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
@@ -44,6 +44,11 @@ run-hoodi-validator: generate-jwt-hoodi
 	@echo "You are about to run a Hoodi node in validator mode (--derivation.verify-mode=layer1)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	DERIVATION_VERIFY_MODE=layer1 docker-compose --env-file .env_hoodi up node &
+
+## Backward-compat aliases: the validator is now the same container as the node.
+stop-validator: stop-node
+
+rm-validator: rm-node
 
 ## build from source (requires Go)
 submodule-init:
@@ -97,9 +102,10 @@ run-hoodi-node-binary: generate-jwt-hoodi
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	sh ./run-binary.sh .env_hoodi
 
-## validator mode (binary) = single node with --derivation.verify-mode=layer1.
-## MORPH_NODE_DERIVATION_VERIFY_MODE is not set by the env files, so it survives
-## sourcing and the entrypoint honors it first. Requires L1_BEACON_CHAIN_RPC.
+## Validator commands (binary), kept for backward compatibility = single node with
+## --derivation.verify-mode=layer1. MORPH_NODE_DERIVATION_VERIFY_MODE is not set by
+## the env files, so it survives sourcing and the entrypoint honors it first.
+## Requires L1_BEACON_CHAIN_RPC.
 run-validator-binary: generate-jwt
 	@echo "You are about to run a Mainnet node in validator mode (--derivation.verify-mode=layer1, binary)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
