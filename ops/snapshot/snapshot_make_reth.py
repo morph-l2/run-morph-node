@@ -6,10 +6,10 @@ ops/snapshot/snapshot_make.py
 Runs on the node server via cron (1st and 15th of each month).
 
 Responsibilities:
-  1. Stop morph-geth and morph-node
+  1. Stop morph-reth and morph-node
   2. Create and compress a snapshot of chain data
   3. Upload the snapshot to S3
-  4. Restart morph-geth, wait for RPC, collect base_height
+  4. Restart morph-reth, wait for RPC, collect base_height
   5. Restart morph-node
   6. Call update_metadata.py to open a PR updating the README snapshot table
 
@@ -64,7 +64,7 @@ def run(args: list, check: bool = True) -> None:
     print(f"  $ {' '.join(str(a) for a in args)}")
     subprocess.run(args, check=check)
 
-# ── Geth RPC ───────────────────────────────────────────────────────────────────
+# ── reth RPC ───────────────────────────────────────────────────────────────────
 
 def get_block_height(rpc_url: str = "http://localhost:8545",
                      retries: int = 30, interval: int = 5) -> int:
@@ -83,9 +83,9 @@ def get_block_height(rpc_url: str = "http://localhost:8545",
                     return int(result, 16)
         except Exception:
             pass
-        print(f"  attempt {i}: geth not ready yet, retrying in {interval}s...")
+        print(f"  attempt {i}: reth not ready yet, retrying in {interval}s...")
         time.sleep(interval)
-    raise RuntimeError("geth RPC did not become available in time")
+    raise RuntimeError("reth RPC did not become available in time")
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
@@ -114,10 +114,10 @@ def main() -> None:
             print(f"ERROR: {k} is required", file=sys.stderr)
         sys.exit(1)
 
-    # GETH_DB_DIR / NODE_DB_DIR point directly to the directories that will be
-    # packed into the snapshot (as geth/ and data/ respectively).
+    # reth_DB_DIR / NODE_DB_DIR point directly to the directories that will be
+    # packed into the snapshot (as reth/ and data/ respectively).
     # Use `or` so that empty-string values in the env file also fall back to defaults.
-    geth_db_dir   = os.environ.get("GETH_DB_DIR") or os.path.join(morph_home, "geth-data")
+    reth_db_dir   = os.environ.get("RETH_DB_DIR") or os.path.join(morph_home, "reth-data")
     node_db_dir   = os.environ.get("NODE_DB_DIR") or os.path.join(morph_home, "node-data", "data")
 
     # All temp files live under SNAPSHOT_WORK_DIR:
@@ -130,14 +130,14 @@ def main() -> None:
     # Safety check: SNAPSHOT_WORK_DIR must not overlap with actual data directories.
     # The script deletes and recreates work_base at startup — if work_base IS or CONTAINS
     # a data directory, that data will be wiped. Placing work_base *inside* MORPH_HOME
-    # (as a dedicated subdirectory) is safe as long as it doesn't overlap with geth/node data.
+    # (as a dedicated subdirectory) is safe as long as it doesn't overlap with reth/node data.
     def _is_subpath(child: str, parent: str) -> bool:
         child  = os.path.realpath(child)
         parent = os.path.realpath(parent)
         return child == parent or child.startswith(parent.rstrip("/") + "/")
 
     # Only block overlap with the actual data dirs, not with MORPH_HOME itself.
-    protected = {"GETH_DB_DIR": geth_db_dir, "NODE_DB_DIR": node_db_dir}
+    protected = {"RETH_DB_DIR": reth_db_dir, "NODE_DB_DIR": node_db_dir}
     for var, path in protected.items():
         if not path:
             continue
@@ -177,40 +177,10 @@ def main() -> None:
         # ── Step 1: Stop services ─────────────────────────────────────────────
         print("\n[1/6] Stopping services...")
         run(["pm2", "stop", "morph-node"])
-        services_stopped = True  # morph-node is down; exception handler must restart it
-
-        # Stop morph-geth cleanly so geth can flush the snapshot journal to disk
-        # (BlockChain.Stop → snaps.Journal) before prune or copy begins.
-        # pm2 stop sends SIGTERM but returns immediately — geth may still be running.
-        # Poll the geth LOCK file: it exists as long as geth holds the datadir lock,
-        # and disappears only when the process has fully exited.
-        #
-        # IMPORTANT: For GETH_PRUNE=true to work, morph-geth must have
-        # kill_timeout: 120000 in its ecosystem.config.js so PM2 does not
-        # SIGKILL geth before the snapshot journal is written to disk.
-        geth_lock = os.path.join(geth_db_dir, "geth", "LOCK")
-        print("  Stopping morph-geth (waiting for LOCK file to disappear, up to 120s)...")
-        run(["pm2", "stop", "morph-geth"])
-        for i in range(120):
-            if not os.path.exists(geth_lock):
-                print(f"  morph-geth exited after {i}s")
-                break
-            time.sleep(1)
-        else:
-            print("  WARNING: geth LOCK file still present after 120s — proceeding anyway")
-
+        run(["pm2", "stop", "morph-reth"])
+        services_stopped = True
+        time.sleep(10)
         print("✅ Services stopped")
-
-        # ── Step 1.5: Optional prune (full node only) ─────────────────────────
-        # Set GETH_PRUNE=true in snapshot.env to run `geth snapshot prune-state`
-        # before copying data.  Leave unset (or false) for archive nodes.
-        geth_bin = os.environ.get("GETH_BIN") or "geth"
-        if os.environ.get("GETH_PRUNE", "").lower() in ("1", "true", "yes"):
-            print("\n[1.5/6] Pruning geth state (may take a while)...")
-            run([geth_bin, "snapshot", "prune-state", "--datadir", geth_db_dir])
-            print("✅ Prune complete")
-        else:
-            print("\n[1.5/6] Skipping prune (GETH_PRUNE not set)")
 
         # ── Step 2: Create snapshot ───────────────────────────────────────────
         print("\n[2/6] Creating snapshot...")
@@ -220,18 +190,21 @@ def main() -> None:
                 shutil.rmtree(d)
         os.makedirs(work_dir)
 
-        # geth: only chaindata is needed for a snapshot
-        geth_src = os.path.join(geth_db_dir, "geth", "chaindata")
-        geth_dst = os.path.join(work_dir, "geth", "chaindata")
-        print(f"  Copying geth chaindata: {geth_src}  (may take a while...)")
-        shutil.copytree(geth_src, geth_dst)
-        geth_size = subprocess.check_output(["du", "-sh", geth_dst]).decode().split()[0]
-        print(f"  ✅ geth chaindata copied: {geth_size}")
+        # reth: pack db, static_files, rocksdb, exex, morph directories
+        reth_dst = os.path.join(work_dir, "reth-data")
+        os.makedirs(reth_dst)
+        for db in ["db", "static_files", "rocksdb", "exex", "morph"]:
+            src = os.path.join(reth_db_dir, db)
+            dst = os.path.join(reth_dst, db)
+            print(f"  Copying reth {db}...")
+            shutil.copytree(src, dst)
+        reth_size = subprocess.check_output(["du", "-sh", reth_dst]).decode().split()[0]
+        print(f"  ✅ reth data copied: {reth_size}")
 
         # node: only the 5 essential db directories
         node_dst = os.path.join(work_dir, "data")
         os.makedirs(node_dst)
-        for db in ["blockstore.db", "cs.wal", "state.db", "tx_index.db", "evidence.db", "signatures.db"]:
+        for db in ["blockstore.db", "cs.wal", "state.db", "tx_index.db", "evidence.db"]:
             src = os.path.join(node_db_dir, db)
             dst = os.path.join(node_dst, db)
             print(f"  Copying {db}...")
@@ -247,7 +220,7 @@ def main() -> None:
         shutil.rmtree(named_dir)
         size = subprocess.check_output(["du", "-sh", snapshot_file]).decode().split()[0]
         print(f"✅ Snapshot created: {size}")
-
+        
         # ── Step 3: Upload to S3 ──────────────────────────────────────────────
         print("\n[3/6] Uploading to S3...")
 
@@ -274,14 +247,14 @@ def main() -> None:
         os.remove(sha256_file)
         print(f"✅ Removed local snapshot and sha256 files")
 
-        # ── Step 4: Start geth, collect base_height ───────────────────────────
-        print("\n[4/6] Starting morph-geth and collecting base_height...")
-        run(["pm2", "start", "morph-geth"])
-        geth_rpc = os.environ.get("GETH_RPC") or "http://127.0.0.1:8545"
-        print("Waiting for geth RPC to be ready...")
-        base_height = get_block_height(geth_rpc)
+        # ── Step 4: Start reth, collect base_height ───────────────────────────
+        print("\n[4/6] Starting morph-reth and collecting base_height...")
+        run(["pm2", "start", "morph-reth"])
+        reth_rpc = os.environ.get("RETH_RPC") or "http://127.0.0.1:8545"
+        print("Waiting for reth RPC to be ready...")
+        base_height = get_block_height(reth_rpc)
         os.environ["BASE_HEIGHT"] = str(base_height)
-        print(f"✅ Geth base height: {base_height}")
+        print(f"✅ Reth base height: {base_height}")
 
         # ── Step 5: Start morph-node ──────────────────────────────────────────
         print("\n[5/6] Starting morph-node...")
@@ -315,7 +288,7 @@ def main() -> None:
             print(f"\nERROR: {e}", file=sys.stderr)
         if services_stopped:
             print("Recovering services...")
-            run(["pm2", "start", "morph-geth"], check=False)
+            run(["pm2", "start", "morph-reth"], check=False)
             run(["pm2", "start", "morph-node"], check=False)
             print("Services recovered.")
         try:
@@ -330,3 +303,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
