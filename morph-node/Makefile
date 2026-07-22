@@ -7,10 +7,6 @@ include .env_hoodi
 
 JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 
-# Load ZK-specific snapshot variables used by *-zk-snapshot targets
-include .env_zk
-include .env_hoodi_zk
-
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
 
@@ -19,23 +15,14 @@ generate-jwt-hoodi:
 
 ## node management
 run-node: generate-jwt
-	@echo "You are about to run a Mainnet MPT node."
-	@echo "To run a ZK (legacy) node instead, use: make run-zk-node"
+	@echo "You are about to run a Mainnet node."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env up node &
 
 run-hoodi-node: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT node."
-	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node"
+	@echo "You are about to run a Hoodi node."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
 	docker-compose --env-file .env_hoodi up node &
-
-
-run-zk-node: generate-jwt
-	docker-compose --env-file .env --env-file .env_zk up node &
-
-run-hoodi-zk-node: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up node &
 
 stop-node:
 	docker stop morph-node morph-geth
@@ -43,31 +30,25 @@ stop-node:
 rm-node:
 	docker rm morph-node morph-geth
 
-## validator management
+## Validator commands, kept for backward compatibility. A "validator" is now just
+## the single node run in layer1 batch-verification mode (--derivation.verify-mode=layer1:
+## pull the L1 beacon blob and derive via the engine). There is no separate validator
+## container anymore, so stop/rm operate on the same morph-node container.
+## Requires a working L1_BEACON_CHAIN_RPC in the env file.
 run-validator: generate-jwt
-	@echo "You are about to run a Mainnet MPT validator."
-	@echo "To run a ZK (legacy) validator instead, use: make run-zk-validator"
+	@echo "You are about to run a Mainnet node in validator mode (--derivation.verify-mode=layer1)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	docker-compose --env-file .env up validator &
+	DERIVATION_VERIFY_MODE=layer1 docker-compose --env-file .env up node &
 
 run-hoodi-validator: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT validator."
-	@echo "To run a ZK (legacy) validator instead, use: make run-hoodi-zk-validator"
+	@echo "You are about to run a Hoodi node in validator mode (--derivation.verify-mode=layer1)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	docker-compose --env-file .env_hoodi up validator &
+	DERIVATION_VERIFY_MODE=layer1 docker-compose --env-file .env_hoodi up node &
 
+## Backward-compat aliases: the validator is now the same container as the node.
+stop-validator: stop-node
 
-run-zk-validator: generate-jwt
-	docker-compose --env-file .env --env-file .env_zk up validator &
-
-run-hoodi-zk-validator: generate-jwt-hoodi
-	docker-compose --env-file .env_hoodi --env-file .env_hoodi_zk up validator &
-
-stop-validator:
-	docker stop validator_node morph-geth
-
-rm-validator:
-	docker rm validator_node morph-geth
+rm-validator: rm-node
 
 ## build from source (requires Go)
 submodule-init:
@@ -112,38 +93,28 @@ build: build-geth build-morphnode
 
 ## binary mode
 run-node-binary: generate-jwt
-	@echo "You are about to run a Mainnet MPT node (binary mode)."
-	@echo "To run a ZK (legacy) node instead, use: make run-zk-node-binary"
+	@echo "You are about to run a Mainnet node (binary mode)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh node .env
+	sh ./run-binary.sh .env
 
 run-hoodi-node-binary: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT node (binary mode)."
-	@echo "To run a ZK (legacy) node instead, use: make run-hoodi-zk-node-binary"
+	@echo "You are about to run a Hoodi node (binary mode)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh node .env_hoodi
+	sh ./run-binary.sh .env_hoodi
 
+## Validator commands (binary), kept for backward compatibility = single node with
+## --derivation.verify-mode=layer1. MORPH_NODE_DERIVATION_VERIFY_MODE is not set by
+## the env files, so it survives sourcing and the entrypoint honors it first.
+## Requires L1_BEACON_CHAIN_RPC.
 run-validator-binary: generate-jwt
-	@echo "You are about to run a Mainnet MPT validator (binary mode)."
+	@echo "You are about to run a Mainnet node in validator mode (--derivation.verify-mode=layer1, binary)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh validator .env
+	MORPH_NODE_DERIVATION_VERIFY_MODE=layer1 sh ./run-binary.sh .env
 
 run-hoodi-validator-binary: generate-jwt-hoodi
-	@echo "You are about to run a Hoodi MPT validator (binary mode)."
+	@echo "You are about to run a Hoodi node in validator mode (--derivation.verify-mode=layer1, binary)."
 	@{ [ -t 0 ] || { echo "Error: interactive confirmation required (run in a TTY)."; exit 1; }; printf "Continue? [Y/n] "; read confirm; if [ "$$confirm" = "n" ] || [ "$$confirm" = "N" ]; then exit 1; fi; }
-	sh ./run-binary.sh validator .env_hoodi
-
-run-zk-node-binary: generate-jwt
-	sh ./run-binary.sh node .env .env_zk
-
-run-hoodi-zk-node-binary: generate-jwt-hoodi
-	sh ./run-binary.sh node .env_hoodi .env_hoodi_zk
-
-run-zk-validator-binary: generate-jwt
-	sh ./run-binary.sh validator .env .env_zk
-
-run-hoodi-zk-validator-binary: generate-jwt-hoodi
-	sh ./run-binary.sh validator .env_hoodi .env_hoodi_zk
+	MORPH_NODE_DERIVATION_VERIFY_MODE=layer1 sh ./run-binary.sh .env_hoodi
 
 stop-binary:
 	@if [ -f .geth.pid ]; then kill $$(cat .geth.pid) 2>/dev/null; rm -f .geth.pid; echo "geth stopped."; fi
@@ -204,7 +175,7 @@ quickstart-hoodi-node: generate-jwt-hoodi
 quickstart-hoodi-node-binary: generate-jwt-hoodi build
 	@echo "=== Quickstart: Hoodi Node (Binary) ==="
 	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
-	sh ./run-binary.sh node .env_hoodi
+	sh ./run-binary.sh .env_hoodi
 
 quickstart-mainnet-node: generate-jwt
 	@echo "=== Quickstart: Mainnet Node (Docker) ==="
@@ -214,7 +185,7 @@ quickstart-mainnet-node: generate-jwt
 quickstart-mainnet-node-binary: generate-jwt build
 	@echo "=== Quickstart: Mainnet Node (Binary) ==="
 	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
-	sh ./run-binary.sh node .env
+	sh ./run-binary.sh .env
 
 
 # Common function for download and decompress
@@ -260,12 +231,6 @@ download-and-decompress-hoodi-snapshot:
 download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-snapshot
 
 download-and-decompress-hoodi-mpt-snapshot: download-and-decompress-hoodi-snapshot
-
-download-and-decompress-mainnet-zk-snapshot:
-	$(call download-and-decompress,$(MAINNET_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
-
-download-and-decompress-hoodi-zk-snapshot:
-	$(call download-and-decompress,$(HOODI_ZK_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
 
 
 
