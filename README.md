@@ -144,40 +144,15 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 ## Verifying Snapshot Integrity
 
-Each snapshot has a corresponding SHA-256 checksum file, available by appending
-`.sha256` to the snapshot URL. For example:
-
-```
-https://snapshot.morphl2.io/hoodi/snapshot-archive-20260722-1.tar.gz
-https://snapshot.morphl2.io/hoodi/snapshot-archive-20260722-1.tar.gz.sha256
-```
-
-After downloading a snapshot, compute its checksum and compare it against the
-expected value. The two commands below produce the same hash — use whichever is
-available on your system:
+Each snapshot has a SHA-256 checksum file at the same URL with a `.sha256`
+suffix. Compute the hash and compare it against the `.sha256` file — use
+whichever command is available on your system:
 
 ```bash
-# Using shasum
 shasum -a 256 snapshot.tar.gz
-
-# Or using OpenSSL
+# or
 openssl dgst -sha256 snapshot.tar.gz
 ```
-
-Compare the resulting hash with the expected value from the `.sha256` file (for
-example `556be01503aa625a36af8d3a4f9ac4caa51ed2ddc01d764567bc360165c46f6f`). If
-they match, the snapshot download is complete and intact.
-
-You can also verify automatically by downloading the checksum file alongside the
-snapshot and running:
-
-```bash
-# Downloads the .sha256 file, then checks it against the local snapshot
-curl -O https://snapshot.morphl2.io/hoodi/snapshot-archive-20260722-1.tar.gz.sha256
-shasum -a 256 -c snapshot-archive-20260722-1.tar.gz.sha256
-```
-
-A `snapshot.tar.gz: OK` result confirms the download is intact.
 
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
