@@ -96,7 +96,7 @@ def main() -> None:
     # SNAPSHOT_DAYS: comma-separated days of month to run (default: 13,28).
     # On other days the script exits immediately — prevents accidental runs on pm2 start.
     # Set SNAPSHOT_DAYS=any to bypass this check (e.g. for manual testing).
-    snapshot_days_env = os.environ.get("SNAPSHOT_DAYS", "1,15")
+    snapshot_days_env = os.environ.get("SNAPSHOT_DAYS", "1,17")
     if snapshot_days_env.strip().lower() != "any":
         allowed_days = {int(d.strip()) for d in snapshot_days_env.split(",")}
         today = datetime.now().day
@@ -120,11 +120,11 @@ def main() -> None:
     reth_db_dir   = os.environ.get("RETH_DB_DIR") or os.path.join(morph_home, "reth-data")
     node_db_dir   = os.environ.get("NODE_DB_DIR") or os.path.join(morph_home, "node-data", "data")
 
-    # All temp files live under SNAPSHOT_WORK_DIR:
-    #   staging/  — copytree target, deleted after compression
-    #   snapshot.tar.gz — compressed output, deleted after S3 upload
+    # SNAPSHOT_WORK_DIR holds only the compressed archive (snapshot.tar.gz),
+    # deleted after S3 upload. The snapshot is tarred directly from the live
+    # data dirs — no staging copy — so this dir needs room for the archive
+    # (~1/2 of the source data after gzip), not a full second copy.
     work_base     = os.environ.get("SNAPSHOT_WORK_DIR") or "/data/snapshot_work"
-    work_dir      = os.path.join(work_base, "staging")
     snapshot_file = os.path.join(work_base, "snapshot.tar.gz")
 
     # Safety check: SNAPSHOT_WORK_DIR must not overlap with actual data directories.
@@ -152,14 +152,14 @@ def main() -> None:
     # SNAPSHOT_PREFIX allows different snapshot types to coexist:
     # e.g. "snapshot", "mpt-snapshot", "full-snapshot"
     snapshot_prefix   = os.environ.get("SNAPSHOT_PREFIX", "snapshot")
-    date              = datetime.now(timezone.utc).strftime("%Y%m%d")
+    date              = datetime.now().strftime("%Y%m%d")
     snapshot_name     = f"{snapshot_prefix}-{date}-1"
 
     os.environ["SNAPSHOT_NAME"] = snapshot_name
     os.environ["ENVIRONMENT"]   = environment
 
     print(f"=== Morph Snapshot: {snapshot_name} ({environment}) ===")
-    print(f"Started at: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
     gh_token = os.environ.get("GH_TOKEN", "")
     gh_repo  = os.environ.get("GITHUB_REPOSITORY", "")
@@ -183,41 +183,51 @@ def main() -> None:
         print("✅ Services stopped")
 
         # ── Step 2: Create snapshot ───────────────────────────────────────────
+        # NOTE: We tar directly from the live data directories instead of first
+        # copying them into a staging area. On a single-disk host, an intermediate
+        # copy would need a full second copy of the source data plus the archive
+        # itself, blowing past the disk. A SINGLE tar -czf straight to .tar.gz
+        # keeps peak disk usage at (source data + final archive) only. Both reth
+        # and morph-node are stopped here, so the data dirs are read-only.
+        #
+        # tar walks multiple sources by interleaving -C (change dir) with the
+        # member name that follows it. --transform is a global sed expression
+        # applied to every member path; a single expression with two rules
+        # rewrites both source groups into the layout the download tooling
+        # expects (identical to the previous copytree output):
+        #   <reth dir>              -> <snapshot_name>/reth-data/<dir>...
+        #   <db> / state file (node) -> <snapshot_name>/data/<name>...
+        # | is the sed delimiter (never appears in these paths).
         print("\n[2/6] Creating snapshot...")
-        named_dir = os.path.join(work_base, snapshot_name)
-        for d in [work_dir, named_dir]:
-            if os.path.exists(d):
-                shutil.rmtree(d)
-        os.makedirs(work_dir)
+        os.makedirs(work_base, exist_ok=True)
+        if os.path.exists(snapshot_file):
+            os.remove(snapshot_file)
 
         # reth: pack db, static_files, rocksdb, exex, morph directories
-        reth_dst = os.path.join(work_dir, "reth-data")
-        os.makedirs(reth_dst)
-        for db in ["db", "static_files", "rocksdb", "exex", "morph"]:
-            src = os.path.join(reth_db_dir, db)
-            dst = os.path.join(reth_dst, db)
-            print(f"  Copying reth {db}...")
-            shutil.copytree(src, dst)
-        reth_size = subprocess.check_output(["du", "-sh", reth_dst]).decode().split()[0]
-        print(f"  ✅ reth data copied: {reth_size}")
+        reth_members = ["db", "static_files", "rocksdb", "exex", "morph"]
+        # node: the 5 essential db directories plus priv_validator_state.json.
+        # The state file lives alongside the dbs under node_db_dir and MUST be
+        # included — a validator restored without it can double-sign or refuse
+        # to start (CometBFT refuses to overwrite a missing/blank state file).
+        node_dbs = ["blockstore.db", "cs.wal", "state.db", "tx_index.db",
+                    "evidence.db", "signatures.db"]
+        node_members = node_dbs + ["priv_validator_state.json"]
 
-        # node: only the 5 essential db directories
-        node_dst = os.path.join(work_dir, "data")
-        os.makedirs(node_dst)
-        for db in ["blockstore.db", "cs.wal", "state.db", "tx_index.db", "evidence.db"]:
-            src = os.path.join(node_db_dir, db)
-            dst = os.path.join(node_dst, db)
-            print(f"  Copying {db}...")
-            shutil.copytree(src, dst)
-        node_size = subprocess.check_output(["du", "-sh", node_dst]).decode().split()[0]
-        print(f"  ✅ node data copied: {node_size}")
+        reth_alt = "\\|".join(reth_members)
+        node_alt = "\\|".join(node_members)
+        transform = (
+            f"--transform=s|^\\({reth_alt}\\)|{snapshot_name}/reth-data/\\1|;"
+            f"s|^\\({node_alt}\\)|{snapshot_name}/data/\\1|"
+        )
 
-        # Rename staging/ to snapshot_name so the tar extracts to a named directory.
-        os.rename(work_dir, named_dir)
-
+        print(f"  Archiving reth data ({reth_db_dir}): {', '.join(reth_members)}")
+        print(f"  Archiving node data ({node_db_dir}): {', '.join(node_members)}")
         print(f"  Compressing to {snapshot_file}  (may take a while...)")
-        run(["tar", "-czf", snapshot_file, "-C", work_base, snapshot_name])
-        shutil.rmtree(named_dir)
+
+        tar_cmd = ["tar", "-czf", snapshot_file, transform,
+                   "-C", reth_db_dir, *reth_members,
+                   "-C", node_db_dir, *node_members]
+        run(tar_cmd)
         size = subprocess.check_output(["du", "-sh", snapshot_file]).decode().split()[0]
         print(f"✅ Snapshot created: {size}")
         
@@ -298,7 +308,7 @@ def main() -> None:
             pass
         sys.exit(1)
 
-    print(f"\n=== Done at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')} ===")
+    print(f"\n=== Done at {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')} ===")
 
 
 if __name__ == "__main__":
