@@ -142,6 +142,18 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-20260630-1](https://snapshot.morphl2.io/hoodi/snapshot-20260630-1.tar.gz) | 3122685 | 3106743 | 6543334 |
 | [snapshot-archive-reth-20260630-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260630-1.tar.gz) | 3122685 | 3106743 | 6543334 |
 
+## Verifying Snapshot Integrity
+
+Each snapshot has a SHA-256 checksum file at the same URL with a `.sha256`
+suffix. Compute the hash and compare it against the `.sha256` file — use
+whichever command is available on your system:
+
+```bash
+shasum -a 256 snapshot.tar.gz
+# or
+openssl dgst -sha256 snapshot.tar.gz
+```
+
 ## Documentation
 For detailed information on Morph and its ecosystem, refer to the official documentation:
 
