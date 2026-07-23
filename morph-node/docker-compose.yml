@@ -1,7 +1,7 @@
 services:
   geth:
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:2.2.3
+    image: ghcr.io/morph-l2/go-ethereum:2.2.4
     restart: unless-stopped
     ports:
       - "8545:8545"
@@ -19,12 +19,19 @@ services:
       - "/bin/sh"
       - "/entrypoint.sh"
 
+  # Single self-verifying node. There is no separate validator service anymore:
+  # every node verifies batches via --derivation.verify-mode. Set
+  # DERIVATION_VERIFY_MODE=layer1 (in .env/.env_hoodi) for the former validator
+  # behavior (pull L1 beacon blob + derive). L1_BEACON_CHAIN_RPC is required in
+  # both modes (the node exits at startup without it); "local" simply doesn't
+  # fetch the blob on the happy path.
   node:
     container_name: morph-node
     depends_on:
       geth:
         condition: service_started
-    image: ghcr.io/morph-l2/node:0.5.7
+    # morph main build with single-sequencer + --derivation.verify-mode support.
+    image: ghcr.io/morph-l2/node:0.6.0
     restart: unless-stopped
     ports:
       - "26656"
@@ -36,41 +43,20 @@ services:
       - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
       - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
       - MORPH_NODE_L1_ETH_RPC=${L1_ETH_RPC}
+      # Required in both verify modes: the node exits at startup if this is empty.
+      # Only fetched at runtime on the layer1 path (local skips it on the happy path).
+      - MORPH_NODE_L1_ETH_BEACON_RPC=${L1_BEACON_CHAIN_RPC}
       - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
       - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACT}
-      - MORPH_NODE_SYNC_START_HEIGHT=${L1_MSG_START_HEIGHT}
-      - NODE_EXTRA_FLAGS=${NODE_EXTRA_FLAGS:-}
-    volumes:
-      - "${MORPH_HOME}/node-data:/db"
-      - "${JWT_SECRET_FILE}:/jwt-secret.txt"
-      - "./entrypoint-node.sh:/entrypoint-node.sh"
-    entrypoint:
-      - "/bin/sh"
-      - "/entrypoint-node.sh"
-
-  validator:
-    container_name: validator_node
-    restart: unless-stopped
-    depends_on:
-      geth:
-        condition: service_started
-    image: ghcr.io/morph-l2/node:0.5.7
-    ports:
-      - "26660"
-    environment:
-      - MORPH_NODE_L2_ETH_RPC=http://morph-geth:8545
-      - MORPH_NODE_L2_ENGINE_RPC=http://morph-geth:8551
-      - MORPH_NODE_L2_ENGINE_AUTH=/jwt-secret.txt
-      # TODO: replace these with public network RPC URLs in .env_hoodi before running Hoodi validator
-      - MORPH_NODE_L1_ETH_RPC=${L1_ETH_RPC}
-      - MORPH_NODE_L1_ETH_BEACON_RPC=${L1_BEACON_CHAIN_RPC}
       - MORPH_NODE_SYNC_DEPOSIT_CONTRACT_ADDRESS=${L1MESSAGEQUEUE_CONTRACT}
-      - MORPH_NODE_ROLLUP_ADDRESS=${ROLLUP_CONTRACT}
+      - MORPH_NODE_SYNC_START_HEIGHT=${L1_MSG_START_HEIGHT}
       - MORPH_NODE_DERIVATION_START_HEIGHT=${DERIVATION_START_HEIGHT}
       - MORPH_NODE_DERIVATION_BASE_HEIGHT=${L2_BASE_HEIGHT}
-      - MORPH_NODE_SYNC_START_HEIGHT=${L1_MSG_START_HEIGHT}
-      - MORPH_NODE_L1_CHAIN_ID=${L1_CHAIN_ID}
-      - NODE_EXTRA_FLAGS=--validator ${NODE_EXTRA_FLAGS:-}
+      # Batch verification mode: "local" (default, rebuild blob from L2 + compare
+      # vs L1) or "layer1" (pull L1 beacon blob + derive, former validator behavior).
+      # Empty => binary default (local).
+      - MORPH_NODE_DERIVATION_VERIFY_MODE=${DERIVATION_VERIFY_MODE:-}
+      - NODE_EXTRA_FLAGS=${NODE_EXTRA_FLAGS:-}
     volumes:
       - "${MORPH_HOME}/node-data:/db"
       - "${JWT_SECRET_FILE}:/jwt-secret.txt"
