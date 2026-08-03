@@ -119,15 +119,14 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-archive-20260803-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260803-1.tar.gz) | 25671158 | 25658857 | 24979932 |
+| [snapshot-20260803-1](https://snapshot.morphl2.io/mainnet/snapshot-20260803-1.tar.gz) | 25671158 | 25658857 | 24980065 |
+| [snapshot-archive-reth-20260803-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260803-1.tar.gz) | 25671367 | 25658857 | 24980107 |
 | [snapshot-archive-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260720-1.tar.gz) | 25572052 | 25553778 | 24664547 |
 | [snapshot-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-20260720-1.tar.gz) | 25572052 | 25553778 | 24664686 |
 | [snapshot-archive-reth-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260720-1.tar.gz) | 25572052 | 25553778 | 24664700 |
 | [snapshot-archive-20260701-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260701-1.tar.gz) | 25440822 | 25439950 | 24216219 |
 | [snapshot-20260701-1](https://snapshot.morphl2.io/mainnet/snapshot-20260701-1.tar.gz) | 25440822 | 25439950 | 24216219 |
 | [snapshot-archive-reth-20260701-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260701-1.tar.gz) | 25440822 | 25439950 | 24216219 |
-| [snapshot-archive-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
-| [snapshot-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
-| [snapshot-archive-reth-20260616-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260616-1.tar.gz) | 25333309 | 25330305 | 23832071 |
 
 **For hoodi testnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
