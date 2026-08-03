@@ -119,6 +119,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-20260803-1](https://snapshot.morphl2.io/mainnet/snapshot-20260803-1.tar.gz) | 25671158 | 25658857 | 24980065 |
+| [snapshot-archive-reth-20260803-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260803-1.tar.gz) | 25671367 | 25658857 | 24980107 |
 | [snapshot-archive-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260720-1.tar.gz) | 25572052 | 25553778 | 24664547 |
 | [snapshot-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-20260720-1.tar.gz) | 25572052 | 25553778 | 24664686 |
 | [snapshot-archive-reth-20260720-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260720-1.tar.gz) | 25572052 | 25553778 | 24664700 |
