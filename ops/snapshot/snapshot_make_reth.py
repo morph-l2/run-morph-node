@@ -203,8 +203,8 @@ def main() -> None:
         if os.path.exists(snapshot_file):
             os.remove(snapshot_file)
 
-        # reth: pack db, static_files, rocksdb, exex, morph directories
-        reth_members = ["db", "static_files", "rocksdb", "exex", "morph"]
+        # reth: pack db, static_files, rocksdb, morph directories
+        reth_members = ["db", "static_files", "rocksdb", "morph"]
         # node: the 5 essential db directories plus priv_validator_state.json.
         # The state file lives alongside the dbs under node_db_dir and MUST be
         # included — a validator restored without it can double-sign or refuse
