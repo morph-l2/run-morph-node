@@ -1,7 +1,7 @@
 services:
   geth:
     container_name: morph-geth
-    image: ghcr.io/morph-l2/go-ethereum:2.2.5
+    image: ghcr.io/morph-l2/go-ethereum:2.2.6
     restart: unless-stopped
     ports:
       - "8545:8545"
@@ -31,7 +31,7 @@ services:
       geth:
         condition: service_started
     # morph main build with single-sequencer + --derivation.verify-mode support.
-    image: ghcr.io/morph-l2/node:0.6.1
+    image: ghcr.io/morph-l2/node:0.6.3
     restart: unless-stopped
     ports:
       - "26656"
