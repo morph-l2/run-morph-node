@@ -117,8 +117,9 @@ The table below provides the node snapshot data and corresponding download URLs.
 **For mainnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
-|:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+|:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------
 | [snapshot-20260902-1](https://snapshot.morphl2.io/mainnet/snapshot-20260902-1.tar.gz) | 25885664 | 25880870 | 26137782 |
+| [snapshot-archive-reth-20260902-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260902-1.tar.gz) | 25885664 | 25880870 | 26137782 |
 | [snapshot-archive-20260817-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-20260817-1.tar.gz) | 25770865 | 25751519 | 25380612 |
 | [snapshot-20260817-1](https://snapshot.morphl2.io/mainnet/snapshot-20260817-1.tar.gz) | 25770865 | 25751519 | 25380612 |
 | [snapshot-archive-reth-20260817-1](https://snapshot.morphl2.io/mainnet/snapshot-archive-reth-20260817-1.tar.gz) | 25770865 | 25751519 | 25380612 |
