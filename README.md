@@ -73,6 +73,12 @@ Before setting up a Morph node, ensure you have the following installed:
       `reth-data/` tree plus the same `data/` for the node. `static-nodes.json`
       is not in the snapshot; the `quickstart-*-reth-*` / `setup-snapshot-data-reth`
       helpers copy it from `geth-data/` into `reth-data/` for `--trusted-peers`.
+      For example, if the reth snapshot folder is named `snapshot-archive-reth-20260902-1`,
+      move the directories into the `MORPH_HOME` directories:
+        ```
+        mv ${MORPH_HOME}/snapshot-archive-reth-20260902-1/reth-data/* ${MORPH_HOME}/reth-data
+        mv ${MORPH_HOME}/snapshot-archive-reth-20260902-1/data/* ${MORPH_HOME}/node-data/data
+        ```
       The folder structure will be like
         ```
         └── ${MORPH_HOME}
