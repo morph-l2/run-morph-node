@@ -9,6 +9,11 @@ include .env_hoodi
 
 JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 
+# morph-reth version to build/run. Keep this in sync with the image tag in
+# docker-compose.reth.yml (v$(RETH_VERSION)). Override on the command line, e.g.
+# `make build-reth RETH_VERSION=1.4.0`. `?=` lets an env var take precedence.
+RETH_VERSION ?= 1.3.0
+
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
 
@@ -77,14 +82,17 @@ submodule-init:
 	@echo "Submodules ready."
 
 # Update submodule versions and docker-compose.yml image tags in one shot.
-# Usage: make set-versions GETH_VERSION=2.2.1 NODE_VERSION=0.5.3
+# Usage: make set-versions GETH_VERSION=2.2.1 NODE_VERSION=0.5.3 [RETH_VERSION=1.4.0]
+# RETH_VERSION also rewrites the morph-reth image tag in docker-compose.reth.yml so
+# the Docker and binary reth paths stay on the same version (defaults to $(RETH_VERSION)).
 set-versions:
 	cd ../go-ethereum && git fetch --tags && git checkout morph-v$(GETH_VERSION)
 	cd ../morph       && git fetch --tags && git checkout v$(NODE_VERSION)
 	sed -i'' 's|go-ethereum:[0-9.]*|go-ethereum:$(GETH_VERSION)|g' docker-compose.yml
 	sed -i'' 's|morph-l2/node:[0-9.]*|morph-l2/node:$(NODE_VERSION)|g' docker-compose.yml
+	sed -i'' 's|morph-reth:v[0-9.]*|morph-reth:v$(RETH_VERSION)|g' docker-compose.reth.yml
 	cd .. && git add go-ethereum morph
-	@echo "Done. Commit with: git commit -m 'chore: bump geth=$(GETH_VERSION) node=$(NODE_VERSION)'"
+	@echo "Done. Commit with: git commit -m 'chore: bump geth=$(GETH_VERSION) node=$(NODE_VERSION) reth=$(RETH_VERSION)'"
 
 build-geth: submodule-init
 	@if [ -f ./bin/geth ]; then \
@@ -115,11 +123,13 @@ build-reth:
 	@if [ -f ./bin/morph-reth ]; then \
 		echo "morph-reth binary already exists at ./bin/morph-reth, skipping build."; \
 	else \
-		echo "Building morph-reth from source..."; \
+		echo "Building morph-reth v$(RETH_VERSION) from source..."; \
 		if [ ! -d ../morph-reth ]; then \
 			echo "Cloning morph-reth..."; \
 			git clone https://github.com/morph-l2/morph-reth.git ../morph-reth || { echo "Error: failed to clone morph-reth."; exit 1; }; \
 		fi; \
+		echo "Checking out v$(RETH_VERSION) (pinned to match docker-compose.reth.yml)..."; \
+		(cd ../morph-reth && git fetch --tags && git checkout v$(RETH_VERSION)) || { echo "Error: failed to checkout morph-reth v$(RETH_VERSION)."; exit 1; }; \
 		(cd ../morph-reth && cargo build --release) || { echo "Error: morph-reth build failed."; exit 1; }; \
 		mkdir -p ./bin; \
 		cp ../morph-reth/target/release/morph-reth ./bin/morph-reth || { echo "Error: failed to copy morph-reth binary to morph-node/bin/morph-reth."; exit 1; }; \

@@ -145,6 +145,12 @@ is identical; only the execution client and its snapshot differ.
     # or one-command: make quickstart-mainnet-reth-node-binary / quickstart-hoodi-reth-node-binary
     ```
 
+    `build-reth` clones `morph-reth` into `../morph-reth` and checks out a pinned
+    tag `v$(RETH_VERSION)` (default `1.3.0`, kept in sync with the image in
+    `docker-compose.reth.yml`) so the binary and Docker paths run the same version.
+    Bump it in one place with `make set-versions RETH_VERSION=1.4.0 ...` (rewrites the
+    compose image tag), or build a one-off with `make build-reth RETH_VERSION=1.4.0`.
+
 `morph-reth` reads the boot nodes from `static-nodes.json` and passes them to
 `--trusted-peers` (discovery is disabled). The snapshot does **not** contain
 `static-nodes.json`, so the snapshot setup copies it from `${MORPH_HOME}/geth-data/static-nodes.json`
