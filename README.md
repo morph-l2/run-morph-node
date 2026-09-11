@@ -6,6 +6,7 @@
 
 - **Dockerized Deployment**: Simplifies the process of setting up Morph nodes using Docker containers.
 - **Network Support**: Provides configurations for both Mainnet and Hoodi testnet environments.
+- **Execution Client Choice**: Run the node with either **geth** (`go-ethereum`) or **reth** (`morph-reth`) as the execution client.
 - **Snapshot Synchronization**: Supports synchronizing node data from snapshots to expedite the setup process.
 
 ## Prerequisites
@@ -67,6 +68,27 @@ Before setting up a Morph node, ensure you have the following installed:
                 └── data // data directory from snapshot/node
         ```
 
+    - **Reth uses a different snapshot** (the `*-reth-*` rows in the snapshot
+      table) with a different execution-client layout. Its tarball contains a
+      `reth-data/` tree plus the same `data/` for the node. `static-nodes.json`
+      is not in the snapshot; the `quickstart-*-reth-*` / `setup-snapshot-data-reth`
+      helpers copy it from `geth-data/` into `reth-data/` for `--trusted-peers`.
+      The folder structure will be like
+        ```
+        └── ${MORPH_HOME}
+            ├── reth-data // data directory for reth
+            │   ├── db // from snapshot/reth-data
+            │   ├── static_files // from snapshot/reth-data
+            │   ├── rocksdb // from snapshot/reth-data
+            │   ├── morph // from snapshot/reth-data
+            │   └── static-nodes.json // copied from geth-data, parsed into --trusted-peers
+            └── node-data // data directory for node
+                ├── config
+                │   ├── config.toml
+                │   └── genesis.json
+                └── data // data directory from snapshot/node
+        ```
+
 
 5. **Run the Node**:
 
@@ -83,6 +105,71 @@ Before setting up a Morph node, ensure you have the following installed:
     ```
 
 - This command will set up and run the node based on the configurations specified in your .env file.
+
+### Running with reth instead of geth
+
+The node can run with **reth** (`morph-reth`) as its execution client instead of
+geth. Reth uses a **separate execution-client data directory** (`${MORPH_HOME}/reth-data`)
+and, importantly, a **different snapshot** than geth (see the [Snapshot Information](#snapshot-information)
+table — reth snapshots are the `*-reth-*` rows). The `morph-node` (derivation) side
+is identical; only the execution client and its snapshot differ.
+
+- Start a reth-backed node with Docker Compose:
+
+    ```bash
+    make run-reth-node        # mainnet
+    make run-hoodi-reth-node  # hoodi
+    ```
+
+  Stop / remove:
+
+    ```bash
+    make stop-reth-node
+    make rm-reth-node
+    ```
+
+- Or use a one-command quickstart (downloads the reth snapshot, places the data, and runs):
+
+    ```bash
+    make quickstart-mainnet-reth-node   # mainnet, Docker
+    make quickstart-hoodi-reth-node     # hoodi, Docker
+    ```
+
+- **Binary mode** (build `morph-reth` from source with `cargo`, then run the binaries directly):
+
+    ```bash
+    make build-reth-all              # builds morph-reth + morphnode into ./bin
+    make run-reth-node-binary        # mainnet
+    make run-hoodi-reth-node-binary  # hoodi
+    make stop-binary                 # stops geth/reth/morphnode
+    # or one-command: make quickstart-mainnet-reth-node-binary / quickstart-hoodi-reth-node-binary
+    ```
+
+    `build-reth` clones `morph-reth` into `../morph-reth` and checks out a pinned
+    tag `v$(RETH_VERSION)` (default `1.3.0`, kept in sync with the image in
+    `docker-compose.reth.yml`) so the binary and Docker paths run the same version.
+    Bump it in one place with `make set-versions RETH_VERSION=1.4.0 ...` (rewrites the
+    compose image tag), or build a one-off with `make build-reth RETH_VERSION=1.4.0`.
+
+`morph-reth` reads the boot nodes from `static-nodes.json` and passes them to
+`--trusted-peers` (discovery is disabled). The snapshot does **not** contain
+`static-nodes.json`, so the snapshot setup copies it from `${MORPH_HOME}/geth-data/static-nodes.json`
+into `${MORPH_HOME}/reth-data/`. The reth launch command used by the entrypoint is:
+
+```bash
+morph-reth node \
+  --chain <mainnet|hoodi> \
+  --datadir $RETH_DATA_DIR \
+  --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain '*' \
+  --http.api web3,eth,txpool,net,trace \
+  --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins '*' \
+  --ws.api web3,eth,txpool,net,trace \
+  --authrpc.addr 0.0.0.0 --authrpc.port 8551 --authrpc.jwtsecret /jwt-secret.txt \
+  --disable-discovery --nat none \
+  --metrics 0.0.0.0:6060 \
+  --log.file.directory $LOG_DIR --log.file.filter info \
+  --trusted-peers $TRUSTED_PEERS   # parsed from static-nodes.json
+```
 
 ### Running as a validator (batch verification mode)
 
@@ -113,6 +200,17 @@ There is no separate validator container anymore — both paths run the same `mo
 ## Snapshot Information
 
 The table below provides the node snapshot data and corresponding download URLs. Ensure `DERIVATION_START_HEIGHT`, `L1_MSG_START_HEIGHT`, and `L2_BASE_HEIGHT` in `.env`/`.env_hoodi` match the selected snapshot.
+
+> **geth vs reth snapshots:** rows whose name contains `reth` (e.g. `snapshot-archive-reth-*`)
+> are for the **reth** execution client and must be used with the `*-reth-*` make targets;
+> the other rows are **geth** snapshots. The two are not interchangeable. Set
+> `MAINNET_SNAPSHOT_NAME`/`HOODI_SNAPSHOT_NAME` for geth and
+> `MAINNET_RETH_SNAPSHOT_NAME`/`HOODI_RETH_SNAPSHOT_NAME` for reth in the env files.
+>
+> Because the two clients use different snapshots, the height variables are also split:
+> the geth path uses `DERIVATION_START_HEIGHT`/`L1_MSG_START_HEIGHT`/`L2_BASE_HEIGHT`, and
+> the reth path uses `RETH_DERIVATION_START_HEIGHT`/`RETH_L1_MSG_START_HEIGHT`/`RETH_L2_BASE_HEIGHT`.
+> Ensure each set matches the height row of its selected snapshot.
 
 **For mainnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 

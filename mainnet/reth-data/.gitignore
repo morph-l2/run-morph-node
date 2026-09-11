@@ -1,0 +1,6 @@
+# Snapshot- and runtime-generated reth data. Only static-nodes.json (parsed into
+# --trusted-peers) and this file are tracked; everything else is produced by the
+# reth snapshot setup or by running the node.
+*
+!.gitignore
+!static-nodes.json
