@@ -200,6 +200,11 @@ The table below provides the node snapshot data and corresponding download URLs.
 > the other rows are **geth** snapshots. The two are not interchangeable. Set
 > `MAINNET_SNAPSHOT_NAME`/`HOODI_SNAPSHOT_NAME` for geth and
 > `MAINNET_RETH_SNAPSHOT_NAME`/`HOODI_RETH_SNAPSHOT_NAME` for reth in the env files.
+>
+> Because the two clients use different snapshots, the height variables are also split:
+> the geth path uses `DERIVATION_START_HEIGHT`/`L1_MSG_START_HEIGHT`/`L2_BASE_HEIGHT`, and
+> the reth path uses `RETH_DERIVATION_START_HEIGHT`/`RETH_L1_MSG_START_HEIGHT`/`RETH_L2_BASE_HEIGHT`.
+> Ensure each set matches the height row of its selected snapshot.
 
 **For mainnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 

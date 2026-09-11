@@ -92,11 +92,17 @@ if ! nc -z localhost 8551 2>/dev/null; then
     exit 1
 fi
 
-# Start morphnode
+# Start morphnode.
+# Reth uses a separate snapshot from geth with its own heights (RETH_*). entrypoint-node.sh
+# prefers MORPH_NODE_* over the shared DERIVATION_*/L1_MSG_*/L2_BASE_* vars, so pass the
+# reth heights explicitly as MORPH_NODE_* to override the (geth) shared values.
 echo "Starting morphnode..."
 NODE_BINARY=${NODE_BINARY} \
 NODE_HOME=${RETH_HOME}/node-data \
 JWT_SECRET_PATH=${JWT_SECRET_FILE} \
+MORPH_NODE_DERIVATION_START_HEIGHT=${RETH_DERIVATION_START_HEIGHT} \
+MORPH_NODE_DERIVATION_BASE_HEIGHT=${RETH_L2_BASE_HEIGHT} \
+MORPH_NODE_SYNC_START_HEIGHT=${RETH_L1_MSG_START_HEIGHT} \
 NODE_EXTRA_FLAGS="${NODE_EXTRA_FLAGS:-}" \
 sh ./entrypoint-node.sh &
 NODE_PID=$!
