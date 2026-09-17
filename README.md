@@ -236,6 +236,7 @@ The table below provides the node snapshot data and corresponding download URLs.
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-archive-20260915-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260915-1.tar.gz) | 3594839 | 3593802 | 8761644 |
 | [snapshot-20260915-1](https://snapshot.morphl2.io/hoodi/snapshot-20260915-1.tar.gz) | 3594839 | 3593802 | 8761644 |
 | [snapshot-archive-reth-20260915-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260915-1.tar.gz) | 3625153 | 3621708 | 8974058 |
 | [snapshot-archive-20260901-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260901-1.tar.gz) | 3533250 | 3529538 | 8346379 |
@@ -244,9 +245,6 @@ The table below provides the node snapshot data and corresponding download URLs.
 | [snapshot-archive-20260815-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260815-1.tar.gz) | 3420448 | 3413824 | 7593270 |
 | [snapshot-archive-reth-20260815-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260815-1.tar.gz) | 3420448 | 3413824 | 7593270 |
 | [snapshot-archive-20260801-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260801-1.tar.gz) | 3327231 | 3316267 | 7223425 |
-| [snapshot-20260801-1](https://snapshot.morphl2.io/hoodi/snapshot-20260801-1.tar.gz) | 3327231 | 3316267 | 7223425 |
-| [snapshot-archive-reth-20260801-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-reth-20260801-1.tar.gz) | 3327231 | 3316267 | 7223425 |
-| [snapshot-archive-20260722-1](https://snapshot.morphl2.io/hoodi/snapshot-archive-20260722-1.tar.gz) | 3261967 | 3256524 | 7031698 |
 
 ## Verifying Snapshot Integrity
 
