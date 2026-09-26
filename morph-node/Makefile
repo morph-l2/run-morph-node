@@ -282,43 +282,43 @@ endef
 
 quickstart-hoodi-node: generate-jwt-hoodi
 	@echo "=== Quickstart: Hoodi Node (Docker) ==="
-	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 	docker-compose --env-file .env_hoodi up node
 
 quickstart-hoodi-node-binary: generate-jwt-hoodi build
 	@echo "=== Quickstart: Hoodi Node (Binary) ==="
-	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data,$(HOODI_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 	sh ./run-binary.sh .env_hoodi
 
 quickstart-mainnet-node: generate-jwt
 	@echo "=== Quickstart: Mainnet Node (Docker) ==="
-	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 	docker-compose --env-file .env up node
 
 quickstart-mainnet-node-binary: generate-jwt build
 	@echo "=== Quickstart: Mainnet Node (Binary) ==="
-	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 	sh ./run-binary.sh .env
 
 ## reth quickstart targets (use the reth snapshot + reth execution client)
 quickstart-hoodi-reth-node: generate-jwt-hoodi
 	@echo "=== Quickstart: Hoodi Node with reth (Docker) ==="
-	$(call setup-snapshot-data-reth,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data-reth,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 	docker-compose -f docker-compose.reth.yml --env-file .env_hoodi up node
 
 quickstart-hoodi-reth-node-binary: generate-jwt-hoodi build-reth-all
 	@echo "=== Quickstart: Hoodi Node with reth (Binary) ==="
-	$(call setup-snapshot-data-reth,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call setup-snapshot-data-reth,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 	sh ./run-binary-reth.sh .env_hoodi
 
 quickstart-mainnet-reth-node: generate-jwt
 	@echo "=== Quickstart: Mainnet Node with reth (Docker) ==="
-	$(call setup-snapshot-data-reth,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data-reth,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 	docker-compose -f docker-compose.reth.yml --env-file .env up node
 
 quickstart-mainnet-reth-node-binary: generate-jwt build-reth-all
 	@echo "=== Quickstart: Mainnet Node with reth (Binary) ==="
-	$(call setup-snapshot-data-reth,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call setup-snapshot-data-reth,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 	sh ./run-binary-reth.sh .env
 
 
@@ -356,17 +356,17 @@ endef
 # Targets
 
 download-and-decompress-mainnet-snapshot:
-	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call download-and-decompress,$(MAINNET_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 
 download-and-decompress-hoodi-snapshot:
-	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call download-and-decompress,$(HOODI_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 
 ## reth snapshots (separate from the geth snapshots above)
 download-and-decompress-mainnet-reth-snapshot:
-	$(call download-and-decompress,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/mainnet,../mainnet)
+	$(call download-and-decompress,$(MAINNET_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/mainnet,../mainnet)
 
 download-and-decompress-hoodi-reth-snapshot:
-	$(call download-and-decompress,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morphl2.io/hoodi,../hoodi)
+	$(call download-and-decompress,$(HOODI_RETH_SNAPSHOT_NAME),https://snapshot.morph.network/hoodi,../hoodi)
 
 # Backward-compatible aliases used in older PR/test plans
 download-and-decompress-mainnet-mpt-snapshot: download-and-decompress-mainnet-snapshot
