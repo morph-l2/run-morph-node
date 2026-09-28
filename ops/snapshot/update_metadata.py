@@ -51,8 +51,8 @@ import urllib.request
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 INDEXER_BASE_URLS = {
-    "mainnet": "https://explorer-indexer.morphl2.io",
-    "hoodi":   "https://explorer-indexer-hoodi.morphl2.io",
+    "mainnet": "https://explorer-indexer.morph.network",
+    "hoodi":   "https://explorer-indexer-hoodi.morph.network",
 }
 
 ENV_FILE_MAP = {
@@ -250,7 +250,7 @@ def apply_env_update(content: str, environment: str, snapshot_name: str,
 
 def build_new_row(environment: str, snapshot_name: str,
                   deriv_height: str, l1_msg_height: str, base_height: str) -> str:
-    cdn_base = "https://snapshot.morphl2.io"
+    cdn_base = "https://snapshot.morph.network"
     url = f"{cdn_base}/{environment}/{snapshot_name}.tar.gz"
     return f"| [{snapshot_name}]({url}) | {deriv_height} | {l1_msg_height} | {base_height} |"
 

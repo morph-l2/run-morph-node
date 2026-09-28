@@ -26,7 +26,7 @@ import time
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-CDN_BASE = "https://snapshot.morphl2.io"
+CDN_BASE = "https://snapshot.morph.network"
 
 SECTION_MARKERS = {
     "mainnet": "**For mainnet**",
