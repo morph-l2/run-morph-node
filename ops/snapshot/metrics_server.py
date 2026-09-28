@@ -9,8 +9,8 @@ a set of live metrics collected on every scrape:
 
   morph_snapshot_readme_update_status      - from the .prom file (1 ok / 0 fail)
   morph_snapshot_readme_update_timestamp_seconds - from the .prom file
-  morph_exec_block_height                  - eth_blockNumber on the EL RPC
-  morph_client_version{client="geth|reth|node",version="..."} - binary versions
+  morph_snapshot_exec_block_height                  - eth_blockNumber on the EL RPC
+  morph_snapshot_client_version{client="geth|reth|node",version="..."} - binary versions
 
 Intended to run as a persistent process (e.g. managed by pm2).
 
@@ -159,19 +159,19 @@ def collect_live_metrics() -> str:
 
     height = get_exec_block_height()
     lines.append(
-        "# HELP morph_exec_block_height Latest execution-layer block height (eth_blockNumber)"
+        "# HELP morph_snapshot_exec_block_height Latest execution-layer block height (eth_blockNumber)"
     )
-    lines.append("# TYPE morph_exec_block_height gauge")
+    lines.append("# TYPE morph_snapshot_exec_block_height gauge")
     if height is not None:
         lines.append(
-            f'morph_exec_block_height{{environment="{ENVIRONMENT}"}} {height}'
+            f'morph_snapshot_exec_block_height{{environment="{ENVIRONMENT}"}} {height}'
         )
     # On failure we emit no sample so the metric goes stale rather than reporting 0.
 
     lines.append(
-        "# HELP morph_client_version Client version reported by the binary (value in 'version' label, always 1)"
+        "# HELP morph_snapshot_client_version Client version reported by the binary (value in 'version' label, always 1)"
     )
-    lines.append("# TYPE morph_client_version gauge")
+    lines.append("# TYPE morph_snapshot_client_version gauge")
     for client, argv in VERSION_TARGETS.items():
         version = get_client_version(argv)
         if version is None:
@@ -180,7 +180,7 @@ def collect_live_metrics() -> str:
             f'environment="{ENVIRONMENT}",client="{client}",'
             f'version="{_escape_label(version)}"'
         )
-        lines.append(f"morph_client_version{{{labels}}} 1")
+        lines.append(f"morph_snapshot_client_version{{{labels}}} 1")
 
     return "\n".join(lines) + "\n"
 
