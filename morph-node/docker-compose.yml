@@ -1,3 +1,4 @@
+```yaml
 services:
   geth:
     container_name: morph-geth
