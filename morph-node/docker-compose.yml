@@ -4,10 +4,13 @@ services:
     image: ghcr.io/morph-l2/go-ethereum:2.2.6
     restart: unless-stopped
     ports:
-      - "8545:8545"
-      - "8546:8546"
-      - "8551"
-      - "6060"
+      # RPC/WS/metrics are bound to localhost: they must not be reachable
+      # from other hosts (the API list includes operator-only namespaces and
+      # metrics/pprof). P2P (30303) stays public because peering requires it.
+      - "127.0.0.1:8545:8545"
+      - "127.0.0.1:8546:8546"
+      - "127.0.0.1:8551:8551"
+      - "127.0.0.1:6060:6060"
       - "30303"
     volumes:
       - "${MORPH_HOME}/geth-data:/db"

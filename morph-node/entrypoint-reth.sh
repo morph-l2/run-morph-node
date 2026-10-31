@@ -40,18 +40,18 @@ set -- "${RETH_BIN}" node \
   --http.addr 0.0.0.0 \
   --http.port 8545 \
   --http.corsdomain '*' \
-  --http.api web3,eth,txpool,net,trace \
+  --http.api web3,eth,txpool,net \
   --ws \
   --ws.addr 0.0.0.0 \
   --ws.port 8546 \
   --ws.origins '*' \
-  --ws.api web3,eth,txpool,net,trace \
+  --ws.api web3,eth,txpool,net \
   --authrpc.addr 0.0.0.0 \
   --authrpc.port 8551 \
   --authrpc.jwtsecret "${JWT_PATH}" \
   --disable-discovery \
   --nat none \
-  --metrics 0.0.0.0:6060 \
+  --metrics 127.0.0.1:6060 \
   --log.file.directory "${LOG_DIR}" \
   --log.file.filter info
 
