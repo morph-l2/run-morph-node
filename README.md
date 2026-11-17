@@ -223,29 +223,28 @@ The table below provides the node snapshot data and corresponding download URLs.
 | Snapshot Name                                                                         | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:--------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
 | [snapshot-archive-20261117-1](https://snapshot.morph.network/mainnet/snapshot-archive-20261117-1.tar.gz) | 26430867 | 26425693 | 29942294 |
+| [snapshot-20261117-1](https://snapshot.morph.network/mainnet/snapshot-20261117-1.tar.gz) | 26430867 | 26425693 | 29942295 |
+| [snapshot-archive-reth-20261117-1](https://snapshot.morph.network/mainnet/snapshot-archive-reth-20261117-1.tar.gz) | 26430867 | 26425693 | 29942295 |
 | [snapshot-archive-20261102-1](https://snapshot.morph.network/mainnet/snapshot-archive-20261102-1.tar.gz) | 26323195 | 26316305 | 29167181 |
 | [snapshot-20261102-1](https://snapshot.morph.network/mainnet/snapshot-20261102-1.tar.gz) | 26323195 | 26316305 | 29167181 |
 | [snapshot-archive-reth-20261102-1](https://snapshot.morph.network/mainnet/snapshot-archive-reth-20261102-1.tar.gz) | 26323195 | 26316305 | 29167181 |
 | [snapshot-archive-20261017-1](https://snapshot.morph.network/mainnet/snapshot-archive-20261017-1.tar.gz) | 26208397 | 26205946 | 28394410 |
 | [snapshot-20261017-1](https://snapshot.morph.network/mainnet/snapshot-20261017-1.tar.gz) | 26208397 | 26205946 | 28394410 |
 | [snapshot-archive-reth-20261017-1](https://snapshot.morph.network/mainnet/snapshot-archive-reth-20261017-1.tar.gz) | 26208397 | 26205946 | 28394410 |
-| [snapshot-archive-20261010-1](https://snapshot.morph.network/mainnet/snapshot-archive-20261010-1.tar.gz) | 26161416 | 26146601 | 28075991 |
-| [snapshot-archive-reth-20261009-1](https://snapshot.morph.network/mainnet/snapshot-archive-reth-20261009-1.tar.gz) | 26154536 | 26146601 | 28031412 |
-| [snapshot-archive-20260917-1](https://snapshot.morph.network/mainnet/snapshot-archive-20260917-1.tar.gz) | 25993272 | 25990765 | 26894349 |
 
 **For hoodi testnet** (reth is currently in an internal testing phase and is not yet recommended for production use):
 
 | Snapshot Name                                                                       | Derivation Start Height | L1 Msg Start Height | L2 Base Height |
 |:------------------------------------------------------------------------------------|:------------------------|:--------------------|:---------------|
+| [snapshot-archive-20261115-1](https://snapshot.morph.network/hoodi/snapshot-archive-20261115-1.tar.gz) | 4017123 | 3931800 | 11729740 |
+| [snapshot-20261115-1](https://snapshot.morph.network/hoodi/snapshot-20261115-1.tar.gz) | 4017123 | 3931800 | 11729740 |
+| [snapshot-archive-reth-20261115-1](https://snapshot.morph.network/hoodi/snapshot-archive-reth-20261115-1.tar.gz) | 4017123 | 3931800 | 11729740 |
 | [snapshot-archive-20261101-1](https://snapshot.morph.network/hoodi/snapshot-archive-20261101-1.tar.gz) | 3926103 | 3890049 | 11088654 |
 | [snapshot-20261101-1](https://snapshot.morph.network/hoodi/snapshot-20261101-1.tar.gz) | 3926103 | 3890049 | 11088654 |
 | [snapshot-archive-reth-20261101-1](https://snapshot.morph.network/hoodi/snapshot-archive-reth-20261101-1.tar.gz) | 3926103 | 3890049 | 11088654 |
 | [snapshot-archive-20261015-1](https://snapshot.morph.network/hoodi/snapshot-archive-20261015-1.tar.gz) | 3817710 | 3815546 | 10322641 |
 | [snapshot-20261015-1](https://snapshot.morph.network/hoodi/snapshot-20261015-1.tar.gz) | 3817710 | 3815546 | 10322641 |
 | [snapshot-archive-reth-20261015-1](https://snapshot.morph.network/hoodi/snapshot-archive-reth-20261015-1.tar.gz) | 3817710 | 3815546 | 10322640 |
-| [snapshot-archive-20260901-1](https://snapshot.morph.network/hoodi/snapshot-archive-20260901-1.tar.gz) | 3533250 | 3529538 | 8346379 |
-| [snapshot-20260901-1](https://snapshot.morph.network/hoodi/snapshot-20260901-1.tar.gz) | 3533250 | 3529538 | 8346379 |
-| [snapshot-archive-reth-20260901-1](https://snapshot.morph.network/hoodi/snapshot-archive-reth-20260901-1.tar.gz) | 3533250 | 3529538 | 8346700 |
 
 ## Verifying Snapshot Integrity
 
