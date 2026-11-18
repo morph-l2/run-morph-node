@@ -22,12 +22,12 @@ exec "${GETH_BIN}" \
   "--http.vhosts=*" \
   --http.addr=0.0.0.0 \
   --http.port=8545 \
-  --http.api=web3,debug,eth,txpool,net,morph,engine,admin \
+  --http.api=web3,eth,txpool,net,morph \
   --ws \
   --ws.addr=0.0.0.0 \
   --ws.port=8546 \
   "--ws.origins=*" \
-  --ws.api=web3,debug,eth,txpool,net,morph,engine,admin \
+  --ws.api=web3,eth,txpool,net,morph \
   --authrpc.addr=0.0.0.0 \
   --authrpc.port=8551 \
   "--authrpc.vhosts=*" \
@@ -35,4 +35,4 @@ exec "${GETH_BIN}" \
   --gcmode=archive \
   "--log.filename=${GETH_DATADIR}/geth.log" \
   --metrics \
-  --metrics.addr=0.0.0.0
+  --metrics.addr=127.0.0.1
