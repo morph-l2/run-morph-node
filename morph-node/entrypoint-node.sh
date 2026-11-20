@@ -45,4 +45,8 @@ COMMAND="${NODE_BIN} \
 --log.filename ${NODE_HOME}/node.log \
 ${NODE_EXTRA_FLAGS:-}"
 
-eval $COMMAND
+# exec replaces this shell with morphnode so a stop signal reaches it directly. Without it the shell is
+# PID 1 in the container, ignores SIGTERM, and morphnode is SIGKILLed when the stop timeout expires
+# (in binary mode the pid file would point at the shell instead of morphnode).
+# exec has to be inside the eval'd string: `exec eval ...` does not work.
+eval "exec $COMMAND"
