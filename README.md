@@ -152,7 +152,7 @@ is identical; only the execution client and its snapshot differ.
     ```
 
     `build-reth` clones `morph-reth` into `../morph-reth` and checks out a pinned
-    tag `v$(RETH_VERSION)` (default `1.3.0`, kept in sync with the image in
+    tag `v$(RETH_VERSION)` (default `1.5.0`, kept in sync with the image in
     `docker-compose.reth.yml`) so the binary and Docker paths run the same version.
     Bump it in one place with `make set-versions RETH_VERSION=1.4.0 ...` (rewrites the
     compose image tag), or build a one-off with `make build-reth RETH_VERSION=1.4.0`.
