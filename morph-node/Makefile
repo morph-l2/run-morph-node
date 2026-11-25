@@ -12,7 +12,7 @@ JWT_SECRET_FILE_HOODI := $(JWT_SECRET_FILE)
 # morph-reth version to build/run. Keep this in sync with the image tag in
 # docker-compose.reth.yml (v$(RETH_VERSION)). Override on the command line, e.g.
 # `make build-reth RETH_VERSION=1.4.0`. `?=` lets an env var take precedence.
-RETH_VERSION ?= 1.3.0
+RETH_VERSION ?= 1.5.0
 
 generate-jwt:
 	@[ -f $(JWT_SECRET_FILE_MAINNET) ] || (echo "Generating $(JWT_SECRET_FILE_MAINNET)..." && openssl rand -hex 32 > $(JWT_SECRET_FILE_MAINNET) && echo "$(JWT_SECRET_FILE_MAINNET) created.")
